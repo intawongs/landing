@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ข้อเสนอโครงการ NTT: การสร้างสมองกลองค์กร</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Chakra+Petch:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* CORE THEME */
+        :root {
+            --bg-dark: #020617;
+            --bg-darker: #000000;
+            --primary: #0ea5e9; /* Cyan */
+            --secondary: #d946ef; /* Magenta */
+            --accent: #f43f5e; /* Red/Alert */
+            --success: #10b981; /* Green */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.85); /* Increased Opacity for density */
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5; /* Tightened line height */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; /* Global Grid Texture */
+            background-attachment: fixed;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 { font-family: 'Chakra Petch', sans-serif; text-transform: uppercase; }
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+        
+        h2.section-title {
+            font-size: 42px; /* Slightly smaller to fit better */
+            margin-bottom: 40px; /* Reduced margin */
+            text-align: center;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            font-weight: 700;
+        }
+        
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        p { font-size: 16px; color: var(--text-muted); font-weight: 300; } /* Adjusted font size */
+
+        /* LAYOUT UTILS */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        section {
+            padding: 60px 0; /* Reduced padding significantly */
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px; /* Slightly sharper corners */
+            padding: 30px; /* Reduced padding */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            height: 100%; /* Fill height */
+            display: flex;
+            flex-direction: column;
+        }
+        .glass-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            background: rgba(20, 30, 50, 0.95);
+        }
+
+        /* === HERO SECTION === */
+        .hero {
+            height: 85vh; /* Reduced height to show next content sooner */
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #0f2550 0%, #020617 80%);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid var(--primary);
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.15) 1px, transparent 1px);
+            background-size: 60px 60px;
+            perspective: 500px;
+            transform: rotateX(45deg) scale(1.5);
+            opacity: 0.4;
+        }
+        .hero-content { position: relative; z-index: 10; max-width: 900px; }
+        .hero-tag {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 5px 15px;
+            border-radius: 30px;
+            letter-spacing: 2px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        .hero h1 {
+            font-size: 72px; /* Large impact */
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 0 0 40px rgba(14, 165, 233, 0.6);
+            font-weight: 700;
+        }
+        .hero-desc { font-size: 22px; margin: 0 auto 30px; color: #e2e8f0; max-width: 700px; }
+        .btn-glow {
+            display: inline-block;
+            padding: 12px 35px;
+            background: var(--primary);
+            color: #000;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-glow:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.8);
+            background: #fff;
+        }
+
+        /* === DASHBOARD SECTION === */
+        #dashboard { background: linear-gradient(180deg, #020617 0%, #0f172a 100%); }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+            gap: 20px; /* Tighter gap */
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* === INFOGRAPHIC: DATA STRATEGY === */
+        .infographic-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .infographic-box::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+        .flow-container {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .flow-col { text-align: center; position: relative; }
+        .flow-divider { background: rgba(255,255,255,0.1); height: 100%; }
+        .flow-step {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px auto;
+            width: 80%;
+            position: relative;
+            font-weight: 500;
+            color: #fff;
+        }
+        .flow-arrow { font-size: 24px; color: var(--text-muted); margin: 5px 0; }
+        .flow-arrow.red { color: var(--accent); }
+        .flow-arrow.green { color: var(--success); }
+        .flow-badge {
+            position: absolute; top: -10px; right: -10px;
+            font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: bold;
+        }
+        .badge-cost { background: var(--accent); color: #fff; }
+        .badge-save { background: var(--success); color: #000; }
+
+        /* === PRICING SECTION === */
+        .comparison-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr; /* Tighter middle col */
+            align-items: stretch; /* Stretch to fill height */
+            gap: 15px; /* Tighter gap */
+            margin-top: 30px;
+        }
+        .price-box {
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 16px;
+            background: rgba(20, 25, 40, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .price-box.old { border-top: 4px solid var(--accent); opacity: 0.8; }
+        .price-box.new { 
+            border: 2px solid var(--success); 
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(0,0,0,0.8) 100%);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        .price-tag { font-size: 56px; font-weight: 700; font-family: 'Orbitron'; margin: 10px 0; color: #fff; line-height: 1; }
+        .price-tag.strike { text-decoration: line-through; color: var(--text-muted); font-size: 40px; }
+        .features-list { text-align: left; margin-top: 20px; list-style: none; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; }
+        .features-list li { margin-bottom: 10px; font-size: 16px; color: #cbd5e1; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .features-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .arrow-divider { font-size: 30px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+        .badge-value { background: rgba(255,255,255,0.1); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: auto; }
+
+        /* === TIMELINE SECTION === */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 40px;
+            position: relative;
+            margin-bottom: 30px; /* Tightened */
+            width: 50%;
+        }
+        .timeline-item:nth-child(even) {
+            align-self: flex-end;
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 40px;
+            margin-left: 50%;
+        }
+        .timeline-dot {
+            position: absolute; right: -12px; top: 20px; width: 24px; height: 24px;
+            background: var(--bg-dark);
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .timeline-item:nth-child(even) .timeline-dot { left: -12px; right: auto; border-color: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+        .timeline-content {
+            background: var(--glass);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            position: relative;
+        }
+        /* Arrow for tooltip feel */
+        .timeline-content::before {
+            content: ''; position: absolute; top: 25px; right: -10px;
+            border-width: 10px 0 10px 10px; border-style: solid; border-color: transparent transparent transparent var(--glass-border);
+        }
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: auto; left: -10px;
+            border-width: 10px 10px 10px 0; border-color: transparent var(--glass-border) transparent transparent;
+        }
+        .timeline-date { color: var(--primary); font-weight: 700; margin-bottom: 5px; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; }
+
+        /* === BENEFITS SECTION === */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px; /* Tighter gap */
+        }
+        .benefit-card {
+            text-align: center;
+            padding: 30px 15px;
+            transition: 0.3s;
+            background: linear-gradient(145deg, rgba(30,40,60,0.8), rgba(15,20,30,0.9));
+        }
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* === FOOTER === */
+        .cta-section {
+            background: #020617;
+            text-align: center;
+            padding: 60px 0;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .comparison-wrapper { grid-template-columns: 1fr; gap: 30px; }
+            .arrow-divider { transform: rotate(90deg); margin: 10px 0; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; margin-left: 0 !important; padding-left: 50px !important; padding-right: 0 !important; justify-content: flex-start; }
+            .timeline-dot { left: 8px !important; }
+            .hero h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr 1fr; }
+            .timeline-content::before { display: none; }
+            .process-steps { flex-direction: column; }
+            .flow-container { grid-template-columns: 1fr; }
+            .flow-divider { height: 1px; width: 100%; margin: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="hero-tag">สรุปภาพรวมโครงการ</span>
+            <h1>สร้างรากฐาน <span style="color: var(--primary); display: inline-block;">สมองกลองค์กร</span></h1>
+            <p class="hero-desc">ข้อเสนอโครงการวางรากฐานระบบคลาวด์และข้อมูลศูนย์กลาง เพื่อรองรับเทคโนโลยี AI<br>บริหารงบประมาณด้วยกลยุทธ์เน้นเริ่มใช้งานจริงในจุดที่สำคัญเพื่อให้เห็นผลเร็วที่สุด</p>
+            <a href="#dashboard" class="btn-glow">ดูบทสรุปผู้บริหาร</a>
+        </div>
+    </section>
+
+    <!-- DASHBOARD SECTION -->
+    <section id="dashboard">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 30px;">
+                <h2 class="section-title" style="margin-bottom: 0; text-align: left;">บทสรุปผู้บริหาร</h2>
+                <div style="text-align: right; color: var(--text-muted); font-size: 14px;">อัปเดตล่าสุด: วันนี้</div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Status -->
+                <div class="glass-card">
+                    <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-bars-progress" style="color: var(--primary); margin-right: 10px;"></i> สถานะปัจจุบัน
+                    </h3>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <span class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--success); align-self: start;">ตามแผน (On Track)</span>
+                        <p style="color: #fff; font-size: 20px; font-weight: 500; margin-top: 5px;">รอใบเสนอราคาใหม่ (ฉบับแก้ไข)</p>
+                        <p style="font-size: 16px; margin-top: 5px; color: #cbd5e1;">NTT กำลังปรับลดราคาตามขอบเขตงานที่ตกลงกัน เพื่อให้เริ่มงานได้ทันที</p>
+                    </div>
+                </div>
+
+                <!-- Issue -->
+                <div class="glass-card" style="border-top: 4px solid var(--accent); background: linear-gradient(180deg, rgba(244, 63, 94, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);">
+                    <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--accent); margin-right: 10px;"></i> ประเด็นที่ต้องตัดสินใจ
+                    </h3>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <p style="color: var(--accent); font-size: 24px; font-weight: 700; line-height: 1.2;">"ค่าต่อ SAP สูงเกินไป"</p>
+                        <p style="font-size: 16px; margin-top: 5px; color: #cbd5e1;">ส่วนเชื่อมต่อข้อมูลคิดเป็น 48% ของงบรวม (4 ล้านบาท) ซึ่งอาจไม่คุ้มค่าในระยะแรก</p>
+                    </div>
+                </div>
+
+                <!-- Solution -->
+                <div class="glass-card" style="border-top: 4px solid var(--success); background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);">
+                    <h3 style="color: #fff; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-lightbulb" style="color: var(--success); margin-right: 10px;"></i> ข้อเสนอแนะ
+                    </h3>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <p style="color: var(--success); font-size: 24px; font-weight: 700; line-height: 1.2;">"แนะนำทำ MVP ก่อน"</p>
+                        <p style="font-size: 16px; margin-top: 5px; color: #cbd5e1;">ใช้งานผ่าน Google Sheet ที่มีแลกกับความเร็วและงบที่ลดลง (ความเสี่ยงต่ำ, ได้งานเร็ว)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: DATA STRATEGY INFOGRAPHIC -->
+    <section style="background-color: #060b1e; padding: 50px 0;">
+        <div class="container">
+            <h2 class="section-title" style="display: block; width: 100%; margin-bottom: 30px;">INFOGRAPHIC: กลยุทธ์ลดต้นทุนข้อมูล</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto 30px; font-size: 18px;">เปรียบเทียบกระบวนการทำงานเพื่อแสดงให้เห็นว่าการปรับเปลี่ยนวิธีนำเข้าข้อมูล ช่วยลดงบประมาณได้ถึง 4 ล้านบาทอย่างไร</p>
+            
+            <div class="infographic-box">
+                <div class="flow-container">
+                    <!-- Flow A: Expensive -->
+                    <div class="flow-col">
+                        <h3 style="color: var(--accent); margin-bottom: 20px;">ทางเลือก A: แบบเดิม (ต้นทุนสูง)</h3>
+                        <div class="flow-step">
+                            <i class="fa-solid fa-server"></i> ข้อมูล SAP บนเครื่อง ECC6
+                        </div>
+                        <div class="flow-arrow red">
+                            <i class="fa-solid fa-arrow-down"></i>
+                            <div style="font-size: 14px; margin-top: 5px;">พัฒนาโปรแกรม ABAP (เขียนโค้ด)</div>
+                            <div style="font-size: 18px; font-weight: bold; color: var(--accent);">ค่าใช้จ่าย: 4,000,000 บาท</div>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-badge badge-cost">เรียลไทม์</span>
+                            <i class="fa-solid fa-cloud"></i> ส่วนเก็บและประมวลผล (Google Cloud / BigQuery)
+                        </div>
+                        <p style="margin-top: 20px; font-size: 16px; color: var(--text-muted);">
+                            <i class="fa-solid fa-xmark" style="color: var(--accent);"></i> ต้นทุนสูงมาก<br>
+                            <i class="fa-solid fa-xmark" style="color: var(--accent);"></i> ใช้เวลาพัฒนานาน (2-3 เดือน)
+                        </p>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="flow-divider"></div>
+
+                    <!-- Flow B: Recommended -->
+                    <div class="flow-col">
+                        <h3 style="color: var(--success); margin-bottom: 20px;">ทางเลือก B: แบบใหม่ (แนะนำทำ MVP)</h3>
+                        <div class="flow-step">
+                            <i class="fa-solid fa-server"></i> ข้อมูล SAP บนเครื่อง ECC6
+                        </div>
+                        <div class="flow-arrow green">
+                            <i class="fa-solid fa-arrow-down"></i>
+                            <div style="font-size: 14px; margin-top: 5px;">Google Sheet/Files</div>
+                            <div style="font-size: 18px; font-weight: bold; color: var(--success);">ค่าใช้จ่าย: 0 บาท</div>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-badge badge-save">ตามกำหนด</span>
+                            <i class="fa-solid fa-cloud"></i> ส่วนเก็บและประมวลผล (Google Cloud / BigQuery)
+                        </div>
+                        <p style="margin-top: 20px; font-size: 16px; color: #fff;">
+                            <i class="fa-solid fa-check" style="color: var(--success);"></i> <b>ประหยัดทันที 4 ล้านบาท</b><br>
+                            <i class="fa-solid fa-check" style="color: var(--success);"></i> เริ่มใช้งานได้ทันที (ไม่รอพัฒนา)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING COMPARISON SECTION -->
+    <section style="padding: 50px 0;">
+        <div class="container">
+            <h2 class="section-title" style="display: block; width: 100%; margin-bottom: 30px;">สรุปตัวเลขงบประมาณ</h2>
+            
+            <div class="comparison-wrapper">
+                <!-- OLD -->
+                <div class="price-box old">
+                    <h3 style="color: var(--text-muted);">ขอบเขตงานเดิม</h3>
+                    <div class="price-tag strike">8.22 ล้านบาท</div>
+                    <p style="font-size: 16px;">รวมเชื่อมต่อข้อมูลเต็มรูปแบบ</p>
+                    <ul class="features-list">
+                        <li><i class="fa-solid fa-check" style="color: var(--accent);"></i> พัฒนา SAP ABAP (4,000,000 บาท)</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--text-muted);"></i> แพลตฟอร์มข้อมูล (3,000,000 บาท)</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--text-muted);"></i> เวิร์กช็อป Takumi (800,000 บาท)</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--text-muted);"></i> ระบบ Landing Zone สำหรับโครงสร้าง (420,000 บาท)</li>
+                        <li style="margin-top: 20px; font-size: 14px; color: var(--accent);"><i class="fa-regular fa-clock"></i> เริ่มเห็นผลใน: 3-4 เดือน</li>
+                    </ul>
+                </div>
+
+                <!-- ARROW -->
+                <div class="arrow-divider">
+                    <i class="fa-solid fa-circle-arrow-right" style="color: var(--success);"></i>
+                </div>
+
+                <!-- NEW -->
+                <div class="price-box new">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--success); color: #000; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; white-space: nowrap;">ทางเลือกที่แนะนำ</div>
+                    <h3 style="color: var(--success);">กลยุทธ์ MVP เน้นใช้งานได้ทันที</h3>
+                    <div class="price-tag">~4.22 ล้านบาท</div>
+                    <p style="color: var(--success); font-weight: 600; font-size: 18px;">ประหยัดงบได้ทันที 48%</p>
+                    <ul class="features-list" style="background: rgba(0,0,0,0.4);">
+                        <li style="color: rgba(255,255,255,0.5);"><i class="fa-solid fa-xmark" style="color: var(--accent);"></i> <span style="text-decoration: line-through;">พัฒนา SAP ABAP (4,000,000 บาท)</span></li>
+                        <li><i class="fa-solid fa-check" style="color: var(--success);"></i> <b>แพลตฟอร์มข้อมูล (3,000,000 บาท)</b> <span class="badge-value">หัวใจสำคัญ</span></li>
+                        <li><i class="fa-solid fa-check" style="color: var(--success);"></i> <b>เวิร์กช็อป Takumi (800,000 บาท)</b></li>
+                        <li><i class="fa-solid fa-check" style="color: var(--success);"></i> <b>ระบบ Landing Zone สำหรับโครงสร้าง (420,000 บาท)</b></li>
+                        <li style="margin-top: 20px; font-size: 14px; color: var(--success); font-weight: bold;"><i class="fa-solid fa-bolt"></i> เริ่มเห็นผลใน: 1 เดือน</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: YEARLY FEES -->
+    <section style="background: linear-gradient(180deg, #0f172a 0%, #020617 100%); padding: 60px 0;">
+        <div class="container">
+            <h2 class="section-title" style="display: block; width: 100%; margin-bottom: 40px;">ประมาณการค่าใช้จ่ายรายปี</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-size: 16px; color: var(--text-muted);">
+                ค่าสิทธิ์การใช้งาน (License) และค่าบริการคลาวด์รายปี (ประเมินที่ 32 บาท/ดอลลาร์)
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                
+                <!-- Gemini Enterprise -->
+                <div class="glass-card" style="border-top: 4px solid var(--secondary);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="color: #fff; font-size: 20px;">โปรแกรม Gemini Enterprise</h3>
+                            <p style="font-size: 14px; color: var(--secondary);">50 สิทธิ์การใช้งาน</p>
+                        </div>
+                        <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 30px; color: var(--secondary);"></i>
+                    </div>
+                    <div style="margin-top: auto;">
+                        <div style="font-size: 14px; color: var(--text-muted); text-decoration: line-through;">~960,000 บาท ($30,000)</div>
+                        <div style="font-size: 32px; font-weight: 700; color: #fff; font-family: 'Orbitron';">~816,000 บาท</div>
+                        <div style="background: rgba(217, 70, 239, 0.2); color: var(--secondary); display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-top: 5px;">
+                            ประหยัด 15% (ราคาลดแล้ว: $25,500)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Looker Studio Pro -->
+                <div class="glass-card" style="border-top: 4px solid var(--primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="color: #fff; font-size: 20px;">โปรแกรม Looker Studio Pro</h3>
+                            <p style="font-size: 14px; color: var(--primary);">10 สิทธิ์การใช้งาน</p>
+                        </div>
+                        <i class="fa-solid fa-chart-pie" style="font-size: 30px; color: var(--primary);"></i>
+                    </div>
+                    <div style="margin-top: auto;">
+                        <div style="font-size: 32px; font-weight: 700; color: #fff; font-family: 'Orbitron';">~88,672 บาท</div>
+                        <p style="font-size: 14px; color: var(--text-muted);">($2,771 / ปี)</p>
+                    </div>
+                </div>
+
+                <!-- GCP Landing Zone -->
+                <div class="glass-card" style="border-top: 4px solid #f59e0b;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="color: #fff; font-size: 20px;">ระบบ GCP Landing Zone สำหรับโครงสร้างพื้นฐาน</h3>
+                            <p style="font-size: 14px; color: #f59e0b;">ประเมินราคาสำหรับ 1 ปี</p>
+                        </div>
+                        <i class="fa-solid fa-server" style="font-size: 30px; color: #f59e0b;"></i>
+                    </div>
+                    <div style="margin-top: auto;">
+                        <div style="font-size: 32px; font-weight: 700; color: #fff; font-family: 'Orbitron';">~31,296 บาท</div>
+                        <p style="font-size: 14px; color: var(--text-muted);">($978 / ปี)</p>
+                    </div>
+                </div>
+
+                <!-- Variable Cost -->
+                <div class="glass-card" style="border-top: 4px solid var(--success); grid-column: 1 / -1;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 50%;">
+                            <i class="fa-solid fa-file-invoice-dollar" style="font-size: 24px; color: var(--success);"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #fff; font-size: 20px;">ค่าใช้จ่ายผันแปร (Variable Cost)</h3>
+                            <p style="font-size: 16px; color: #cbd5e1; margin-top: 5px;">
+                                <span style="color: var(--success); font-weight: bold;">ค่าใช้งาน Google Cloud:</span> จ่ายตามการใช้งานจริง (Pay as you go)<br>
+                                <span style="color: var(--success); font-weight: bold;">ค่าบริการ Google Care:</span> 3% ของยอดการใช้งานรวม
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE SECTION -->
+    <section>
+        <div class="container">
+            <h2 class="section-title" style="display: block; width: 100%; margin-bottom: 40px;">แผนการดำเนินงาน</h2>
+            <div class="timeline">
+                <!-- Item 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">กุมภาพันธ์</div>
+                        <h3 style="font-size: 20px;">เฟส 1: การวางรากฐาน</h3>
+                        <p style="font-size: 16px; margin-top: 10px;">ติดตั้งระบบ Landing Zone, ความปลอดภัย และเชื่อมต่อเครือข่าย ให้พร้อมรองรับข้อมูลสำคัญ</p>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: var(--success); box-shadow: 0 0 15px var(--success);"></div>
+                    <div class="timeline-content" style="border: 1px solid var(--success); background: rgba(16, 185, 129, 0.05);">
+                        <div class="timeline-date" style="color: var(--success);">มีนาคม</div>
+                        <h3 style="color: var(--success); font-size: 20px;">เฟส 2: เปิดตัว MVP</h3>
+                        <p style="font-size: 16px; margin-top: 10px;">เริ่มใช้งานจริง เชื่อมต่อข้อมูลที่มีอยู่แล้วเพื่อสร้างผลลัพธ์ด่วน (ควบคุมความเสี่ยงได้)</p>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">ไตรมาส 2 เป็นต้นไป</div>
+                        <h3 style="font-size: 20px;">เฟส 3: ขยายผลแพลตฟอร์ม</h3>
+                        <p style="font-size: 16px; margin-top: 10px;">ขยายผลสู่แพลตฟอร์มข้อมูลเต็มรูปแบบ และเชื่อมต่อ AI (Gemini) เพื่อวิเคราะห์เชิงลึก</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BENEFITS SECTION -->
+    <section style="background: #060b1e; padding-bottom: 80px;">
+        <div class="container">
+            <h2 class="section-title" style="display: block; width: 100%; margin-bottom: 40px;">ความคุ้มค่าที่จะได้รับ</h2>
+            <div class="benefits-grid">
+                <div class="glass-card benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 style="font-size: 18px;">โครงสร้างพื้นฐานทันสมัย</h3>
+                    <p style="font-size: 16px; color: #94a3b8; margin-top: 10px;">ระบบคลาวด์ที่ปลอดภัยและได้มาตรฐานสากล</p>
+                </div>
+                <div class="glass-card benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-database"></i></div>
+                    <h3 style="font-size: 18px;">แหล่งข้อมูลเดียว</h3>
+                    <p style="font-size: 16px; color: #94a3b8; margin-top: 10px;">รวมศูนย์ข้อมูลสำคัญ ยอดขาย, จัดซื้อ, การผลิต ไว้ที่เดียว</p>
+                </div>
+                <div class="glass-card benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <h3 style="font-size: 18px;">สร้างนวัตกรรม</h3>
+                    <p style="font-size: 16px; color: #94a3b8; margin-top: 10px;">สร้างวัฒนธรรมนวัตกรรมผ่านเวิร์กช็อปที่จับต้องผลลัพธ์ได้</p>
+                </div>
+                <div class="glass-card benefit-card">
+                    <div class="benefit-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h3 style="font-size: 18px;">พร้อมรองรับ AI</h3>
+                    <p style="font-size: 16px; color: #94a3b8; margin-top: 10px;">เตรียมข้อมูลให้พร้อมใช้งานสำหรับ Gemini AI ในอนาคต</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 style="font-size: 36px; margin-bottom: 10px; color: #fff;">ขั้นตอนถัดไป</h2>
+            <p style="font-size: 20px; margin-bottom: 30px; color: var(--primary);">สิ่งที่ขออนุมัติ: ดำเนินการตามแผน MVP และรอราคาใหม่</p>
+            <div style="background: rgba(255,255,255,0.05); display: inline-block; padding: 15px 40px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);">
+                <i class="fa-solid fa-flag-checkered" style="color: var(--success); margin-right: 10px;"></i>
+                <span style="font-weight: 600; color: #fff;">เป้าหมายเริ่มโครงการ: มีนาคม 2567</span>
+            </div>
+        </div>
+        <footer style="margin-top: 60px; color: rgba(255,255,255,0.3); font-size: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+            &copy; 2024 สรุปข้อเสนอโครงการ Enterprise Brain - เอกสารลับ
+        </footer>
+    </section>
+
+</body>
+</html>
