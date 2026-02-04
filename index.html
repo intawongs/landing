@@ -22,12 +22,13 @@
             --postit-green: #c0f1c0;
             --h1-size: clamp(2.2rem, 8vw, 4.5rem);
             --h2-size: clamp(1.8rem, 6vw, 3.2rem);
-            --p-size: clamp(1rem, 2.2vw, 1.8rem);
+            --p-size: clamp(1rem, 2.2vw, 1.6rem);
         }
 
         * { box-sizing: border-box; transition: background 0.3s, transform 0.3s; }
         body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Sarabun', sans-serif; margin: 0; overflow: hidden; }
 
+        /* Navigation Controls */
         .nav-controls {
             position: fixed; bottom: 20px; right: 20px; display: flex; align-items: center; gap: 10px; z-index: 1000;
             background: rgba(0,0,0,0.7); padding: 8px 15px; border-radius: 50px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
@@ -36,16 +37,19 @@
         .nav-btn:hover { transform: scale(1.1); background: white; }
         .slide-counter { font-family: 'Poppins'; font-weight: 600; font-size: 1rem; min-width: 60px; text-align: center; }
 
+        /* Presentation Structure */
         .presentation-container { width: 100vw; height: 100vh; scroll-snap-type: y mandatory; overflow-y: scroll; scroll-behavior: smooth; }
         .slide { width: 100vw; height: 100vh; scroll-snap-align: start; display: flex; flex-direction: column; padding: clamp(20px, 5vw, 60px); position: relative; background-color: var(--bg-dark); border-bottom: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
 
         .content-wrapper { position: relative; z-index: 1; max-width: 1200px; margin: auto; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
 
+        /* Typography */
         h1, h2, h3 { font-family: 'Poppins', 'Sarabun'; margin: 0; line-height: 1.2; }
         h1 { font-size: var(--h1-size); font-weight: 700; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         h2.slide-title { font-size: var(--h2-size); color: var(--primary); border-left: 8px solid var(--primary); padding-left: 20px; margin-bottom: 20px; }
-        p { font-size: var(--p-size); color: var(--text-dim); line-height: 1.6; }
+        p { font-size: var(--p-size); color: var(--text-dim); line-height: 1.5; }
 
+        /* Components */
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 5vw, 60px); align-items: center; }
         @media (max-width: 850px) { .two-col { grid-template-columns: 1fr; } .content-wrapper { justify-content: flex-start; overflow-y: auto; padding-top: 40px; } }
 
@@ -59,36 +63,42 @@
 
         .highlight-box { background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), transparent); border-left: 6px solid var(--primary); padding: 25px; border-radius: 0 15px 15px 0; font-size: 1.4rem; font-style: italic; margin: 15px 0; }
 
-        .postit-stack { display: flex; gap: clamp(10px, 3vw, 20px); justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 20px; }
+        /* Post-it & Workflow */
+        .postit-stack { display: flex; gap: clamp(10px, 2vw, 30px); justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 30px; }
         .postit { width: clamp(150px, 22vw, 250px); aspect-ratio: 1/1; padding: 20px; color: #1e293b; font-weight: 700; font-size: clamp(0.8rem, 1.5vw, 1.1rem); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.4); line-height: 1.4; }
         .postit.red { background-color: var(--postit-red); transform: rotate(-2deg); }
-        .postit.yellow { background-color: var(--postit-yellow); transform: rotate(2deg); }
+        .postit.yellow { background-color: var(--postit-yellow); transform: rotate(1deg); }
         .postit.green { background-color: var(--postit-green); transform: rotate(-1deg); }
+        .flow-arrow { font-size: 2rem; color: var(--primary); }
 
-        .flow-arrow { font-size: 1.5rem; color: var(--text-dim); }
+        /* 5 Whys Style */
+        .whys-container { background: rgba(30, 41, 59, 0.8); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .why-item { font-size: 1.4rem; margin-bottom: 12px; display: flex; gap: 15px; }
+        .why-num { color: var(--primary); font-weight: 700; min-width: 80px; }
+        .root-cause { color: var(--primary); font-weight: 700; text-decoration: underline; }
 
-        .list-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 12px; font-size: var(--p-size); }
-        .list-item i { color: var(--primary); margin-top: 6px; }
-
-        .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; width: 100%; max-width: 700px; margin: auto; aspect-ratio: 4/3; }
+        /* Voting Matrix */
+        .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; width: 100%; max-width: 600px; margin: auto; aspect-ratio: 4/3; }
         .matrix-cell { display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(30, 41, 59, 0.6); border: 1px dashed rgba(255,255,255,0.1); border-radius: 15px; text-align: center; padding: 15px; }
         .matrix-cell.active { background: rgba(34, 211, 238, 0.15); border-color: var(--primary); border-style: solid; box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); }
 
         .timer-display { font-size: clamp(5rem, 15vw, 10rem); font-weight: 700; font-family: 'Poppins'; color: var(--primary); text-align: center; }
         .joke-tag { color: var(--joke-color); font-size: 0.9rem; font-style: italic; display: block; margin-top: 10px; font-weight: 600; }
+        .list-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 12px; font-size: var(--p-size); }
+        .list-item i { color: var(--primary); margin-top: 6px; }
     </style>
 </head>
 <body>
 
     <div class="nav-controls">
         <button class="nav-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-up"></i></button>
-        <div class="slide-counter"><span id="current">1</span> / 53</div>
+        <div class="slide-counter"><span id="current">1</span> / 55</div>
         <button class="nav-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-down"></i></button>
     </div>
 
     <div class="presentation-container" id="presentation">
         
-        <!-- S1-S10: INTRODUCTION -->
+        <!-- SECTION 1: INTRODUCTION (S1-S10) -->
         <section class="slide" id="s1">
             <div class="content-wrapper" style="text-align: center;">
                 <p style="letter-spacing: 10px; color: var(--primary); font-weight: 600;">WORKSHOP TAKUMI</p>
@@ -102,11 +112,11 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">แนะนำทีมวิทยากร (ที่ไม่ใช่ AI)</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" alt="Team"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
-                        <p>เรามาเพื่อช่วยคุณให้ "เลิกทำงานที่หุ่นยนต์ทำได้" และหันมา "ทำงานที่มนุษย์ควรทำ"</p>
-                        <div class="tile"><h3>ผู้เชี่ยวชาญ AI & Data</h3><p>พร้อมเปลี่ยนความเจ็บปวดให้เป็นโอกาสทางธุรกิจ</p></div>
-                        <span class="joke-tag">*หมายเหตุ: วิทยากรต้องการคาเฟอีนด่วน และไม่รับชำระเป็น Token ครับ</span>
+                        <p>เรามาช่วยคุณให้ "เลิกทำงานที่หุ่นยนต์ทำได้" และหันมา "ทำงานที่มนุษย์ควรทำ"</p>
+                        <div class="tile"><h3>ผู้เชี่ยวชาญ AI & Data</h3><p>พร้อมเปลี่ยนความเจ็บปวดในออฟฟิศให้เป็นโอกาสทางธุรกิจ</p></div>
+                        <span class="joke-tag">*วิทยากรต้องการคาเฟอีนด่วน และไม่รับชำระเป็น Token ครับ</span>
                     </div>
                 </div>
             </div>
@@ -115,7 +125,7 @@
         <section class="slide" id="s3">
             <div class="content-wrapper">
                 <h2 class="slide-title">ทำไมเราถึงต้องมานั่งที่นี่?</h2>
-                <div class="highlight-box">"ทำลายวงจรชีวิตแบบเดิมๆ ที่ทำให้งานคุณไม่ขยับไปไหน"</div>
+                <div class="highlight-box">"มาเพื่อทำลายวงจรชีวิตเดิมๆ ที่ทำให้งานคุณไม่ขยับไปไหน"</div>
                 <div class="tile-grid">
                     <div class="tile"><i class="fa-solid fa-face-tired"></i><h3>เพื่อคุณ</h3><p>ให้คุณมีเวลากลับบ้านไปดูซีรีส์เร็วขึ้น</p></div>
                     <div class="tile"><i class="fa-solid fa-chart-line"></i><h3>เพื่อบริษัท</h3><p>ให้เราเป็นที่หนึ่งด้วยความเร็วของ AI</p></div>
@@ -127,12 +137,12 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">ความจริงที่เจ็บปวด</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80" alt="Pain"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
                         <p>ไฟล์ Excel ในตำนาน:</p>
                         <div class="list-item"><i class="fa-solid fa-file-excel" style="color:#22c55e;"></i> Report_Final_Last_จริงนะ_V2.xlsx</div>
-                        <div class="list-item"><i class="fa-brands fa-line" style="color:#06c755;"></i> ตามงานกลุ่ม Line ตลอด 24 ชม. (รวมวันหยุด)</div>
-                        <div class="list-item"><i class="fa-solid fa-hourglass-half"></i> คีย์ข้อมูล 6 ชม. สรุปผล 1 วินาที (แล้วโดนแก้ใหม่)</div>
+                        <div class="list-item"><i class="fa-brands fa-line" style="color:#06c755;"></i> ตามงานกลุ่ม Line ตลอด 24 ชม.</div>
+                        <div class="list-item"><i class="fa-solid fa-hourglass-half"></i> คีย์ข้อมูล 6 ชม. สรุปผล 1 นาที</div>
                     </div>
                 </div>
             </div>
@@ -144,11 +154,11 @@
                 <div class="two-col">
                     <div>
                         <p>จ้างเด็กฝึกงานชื่อ <strong>Gemini</strong>:</p>
-                        <div class="list-item"><i class="fa-solid fa-check"></i> ไม่เคยลาป่วย ไม่เคยมาสาย (ยกเว้นเน็ตหลุด)</div>
-                        <div class="list-item"><i class="fa-solid fa-check"></i> อ่านเอกสารล้านหน้าในพริบตาเดียว</div>
+                        <div class="list-item"><i class="fa-solid fa-check"></i> ไม่ลาป่วย ไม่สาย (ถ้าเน็ตไม่หลุด)</div>
+                        <div class="list-item"><i class="fa-solid fa-check"></i> อ่านเอกสารล้านหน้าในพริบตา</div>
                         <div class="list-item"><i class="fa-solid fa-check"></i> งาน Routine ทำแทนได้ 100%</div>
                     </div>
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80" alt="Robot"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80"></div>
                 </div>
             </div>
         </section>
@@ -157,8 +167,8 @@
             <div class="content-wrapper" style="text-align: center;">
                 <h2 class="slide-title" style="border:none;">Activity: Check-in</h2>
                 <p>"บอกความรู้สึกตอนนี้ <span style="color: var(--primary);">ด้วยคำเพียง 1 คำ</span>"</p>
-                <div class="image-box" style="max-width: 600px; margin: 20px auto;"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80" alt="Checkin"></div>
-                <span class="joke-tag">*ใครบอกว่า 'ง่วง' วิทยากรจะเรียกตอบคำถามคนแรกนะครับ</span>
+                <div class="image-box" style="max-width: 600px; margin: 20px auto;"><img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80"></div>
+                <span class="joke-tag">*ใครบอกว่า 'ง่วง' วิทยากรจะเรียกตอบคนแรกนะครับ</span>
             </div>
         </section>
 
@@ -167,8 +177,8 @@
                 <h2 class="slide-title">Rules of Engagement</h2>
                 <div class="tile-grid">
                     <div class="tile"><i class="fa-solid fa-shield-halved"></i><h3>Safe Zone</h3><p>แชร์ความผิดพลาดได้เต็มที่</p></div>
-                    <div class="tile"><i class="fa-solid fa-ban"></i><h3>No Blaming</h3><p>เราด่าระบบครับ เราไม่ด่าคน (ฮา)</p></div>
-                    <div class="tile"><i class="fa-solid fa-ear-listen"></i><h3>Listening</h3><p>ฟังเพื่อเปลี่ยนโลกการทำงานของเรา</p></div>
+                    <div class="tile"><i class="fa-solid fa-ban"></i><h3>No Blaming</h3><p>เราด่าระบบครับ เราไม่ด่าคน</p></div>
+                    <div class="tile"><i class="fa-solid fa-ear-listen"></i><h3>Listening</h3><p>ฟังเพื่อเปลี่ยนโลกการทำงาน</p></div>
                 </div>
             </div>
         </section>
@@ -177,10 +187,10 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">วิถีแห่ง "Takumi"</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1200&q=80" alt="Artisan"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
-                        <p><strong>Mastery:</strong> การรู้จักใช้เครื่องมือที่ล้ำที่สุด</p>
-                        <div class="highlight-box">Takumi ยุค AI คือคนที่ใช้ "ปัญญาประดิษฐ์" มาขัดเกลาฝีมือมนุษย์</div>
+                        <p><strong>Mastery:</strong> การรู้จักเครื่องมือที่ทันสมัยที่สุด</p>
+                        <div class="highlight-box">Takumi ยุค AI คือคนที่ใช้ AI เพื่อขัดเกลาฝีมือมนุษย์</div>
                     </div>
                 </div>
             </div>
@@ -191,12 +201,12 @@
                 <h2 class="slide-title">กับดักงาน "Manual"</h2>
                 <div class="two-col">
                     <div>
-                        <div class="list-item"><i class="fa-solid fa-copy"></i> ก๊อปจากเว็บ -> แปะ Excel (วนไป)</div>
-                        <div class="list-item"><i class="fa-solid fa-upload"></i> ก๊อปจากอีเมล -> แปะระบบ (วนกลับมา)</div>
-                        <div class="highlight-box">นี่คืองานที่ควรส่งให้ AI ทำแทนเเดี๋ยวนี้!</div>
+                        <div class="list-item"><i class="fa-solid fa-copy"></i> ก๊อปจากเว็บ -> แปะ Excel</div>
+                        <div class="list-item"><i class="fa-solid fa-upload"></i> ก๊อปจากอีเมล -> แปะระบบ</div>
+                        <div class="highlight-box">นี่คืองานที่ควรส่งให้ AI ทำแทนทันที!</div>
                         <span class="joke-tag">#เลิกเป็นคนคีย์ข้อมูล #มาเป็นคนคุมAIกันดีกว่า</span>
                     </div>
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&w=1200&q=80" alt="Manual"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&w=1200&q=80"></div>
                 </div>
             </div>
         </section>
@@ -205,25 +215,24 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Synergy: มนุษย์ + AI</h2>
                 <div class="tile-grid">
-                    <div class="tile" style="border-color: var(--secondary);"><i class="fa-solid fa-user-check"></i><h3>Human Wisdom</h3><p>ความเห็นอกเห็นใจ และการตัดสินใจ</p></div>
-                    <div class="tile" style="border-color: var(--primary);"><i class="fa-solid fa-microchip"></i><h3>AI Speed</h3><p>ความเร็วแสงในการประมวลผลข้อมูล</p></div>
+                    <div class="tile" style="border-color: var(--secondary);"><i class="fa-solid fa-user-check"></i><h3>Human Wisdom</h3><p>การตัดสินใจเชิงกลยุทธ์</p></div>
+                    <div class="tile" style="border-color: var(--primary);"><i class="fa-solid fa-microchip"></i><h3>AI Speed</h3><p>ความเร็วแสงในการประมวลผล</p></div>
                 </div>
             </div>
         </section>
 
-        <!-- S11-S25: PART 1 - PAIN POINTS -->
+        <!-- SECTION 2: PART 1 - PAIN POINTS (S11-S25) -->
         <section class="slide" id="s11">
             <div class="content-wrapper" style="text-align: center;">
                 <p style="font-size: 1.5rem; color: var(--primary);">PART 1</p>
                 <h1>เจาะลึกความเจ็บปวด (PAIN POINTS)</h1>
-                <p>มาดูซิว่าใครปวดจุดไหนมากที่สุด</p>
             </div>
         </section>
 
         <section class="slide" id="s12">
             <div class="content-wrapper">
                 <h2 class="slide-title">Pain Point คืออะไร?</h2>
-                <div class="highlight-box">"สิ่งที่คุณบ่นตอนพักเที่ยง และทำให้ไม่อยากตื่นมาทำงานในเช้าวันจันทร์"</div>
+                <div class="highlight-box">"สิ่งที่คุณบ่นตอนพักเที่ยง และทำให้ไม่อยากมาทำงานวันจันทร์"</div>
                 <div class="tile-grid">
                     <div class="tile"><h3>งานซ้ำซาก</h3><p>ทำจนจิตหลุดไปดาวอังคาร</p></div>
                     <div class="tile"><h3>งานรอคน</h3><p>รออนุมัติจนงานบูด</p></div>
@@ -236,7 +245,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">The Iceberg Theory</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://c4.wallpaperflare.com/wallpaper/410/402/550/earth-iceberg-wallpaper-preview.jpg" alt="Iceberg"></div>
+                    <div class="image-box"><img src="https://c4.wallpaperflare.com/wallpaper/410/402/550/earth-iceberg-wallpaper-preview.jpg"></div>
                     <div>
                         <p><strong>ยอดเขา:</strong> งานช้า, ยอดตก (ที่บอสมองเห็น)</p>
                         <p><strong>ใต้น้ำ:</strong> ข้อมูลกระจัดกระจาย, พนักงานเหนื่อยล้า (ที่เราเผชิญ)</p>
@@ -247,29 +256,33 @@
 
         <section class="slide" id="s14">
             <div class="content-wrapper">
-                <h2 class="slide-title">ต้นทุนความสูญเสีย</h2>
-                <div class="tile-grid">
-                    <div class="tile"><h3>เสียเวลา</h3><p>เฉลี่ย 3 ชม./วัน กับงานแอดมิน</p></div>
-                    <div class="tile"><h3>เสียกำลังใจ</h3><p>คนเก่งลาออกเพราะเบื่องาน Routine</p></div>
-                    <div class="tile"><h3>เสียเงิน</h3><p>Human Error ราคาแพงมหาศาล</p></div>
+                <h2 class="slide-title">เทคนิคถาม "ทำไม" 5 ครั้ง (5 Whys)</h2>
+                <div class="whys-container">
+                    <p style="font-size: 1.6rem; margin-bottom: 20px;"><strong>ปัญหา:</strong> รถส่งของไปไม่ทัน</p>
+                    <div class="why-item"><span class="why-num">ทำไม 1:</span> ออกรถช้า -> เพราะโหลดของช้า</div>
+                    <div class="why-item"><span class="why-num">ทำไม 2:</span> โหลดของช้า -> เพราะหาของไม่เจอ</div>
+                    <div class="why-item"><span class="why-num">ทำไม 3:</span> หาไม่เจอ -> เพราะไม่ได้แยกหมวดหมู่คลัง</div>
+                    <div class="why-item"><span class="why-num">ทำไม 4:</span> ไม่ได้แยก -> เพราะไม่มีระบบคลังที่แม่นยำ</div>
+                    <div class="why-item"><span class="why-num">ทำไม 5:</span> <span class="root-cause">เพราะยังใช้คนจดมือ (Root Cause!)</span></div>
                 </div>
+                <p style="margin-top: 15px; font-style: italic;">*AI จะแก้ที่ "ทำไมที่ 5" ไม่ใช่แค่ปลายเหตุ</p>
             </div>
         </section>
 
         <section class="slide" id="s15">
             <div class="content-wrapper">
-                <h2 class="slide-title">ทำไมต้อง AI?</h2>
-                <p>เพราะ AI เรียนรู้ความวุ่นวายของออฟฟิศเราได้!</p>
+                <h2 class="slide-title">ต้นทุนความสูญเสีย</h2>
                 <div class="tile-grid">
-                    <div class="tile"><h3>Gemini</h3><p>เข้าใจภาษาไทยและบริบทไทยๆ</p></div>
-                    <div class="tile"><h3>BigQuery</h3><p>จำแม่นกว่ามนุษย์ 1,000 เท่า (ไม่ขี้ลืมเหมือนเรา)</p></div>
+                    <div class="tile"><h3>เสียเวลา</h3><p>เฉลี่ย 3 ชม./วัน กับงานแอดมิน</p></div>
+                    <div class="tile"><h3>เสียคน</h3><p>คนเก่งลาออกเพราะเบื่องานซ้ำๆ</p></div>
+                    <div class="tile"><h3>เสียเงิน</h3><p>Error จากคนนั้นราคาแพงมาก</p></div>
                 </div>
             </div>
         </section>
 
         <section class="slide" id="s16">
             <div class="content-wrapper">
-                <h2 class="slide-title">เจาะลึกรายแผนก (Deep Dive)</h2>
+                <h2 class="slide-title">เจาะลึกรายแผนก</h2>
                 <div class="tile-grid">
                     <div class="tile"><i class="fa-solid fa-coins"></i><h3>Finance</h3></div>
                     <div class="tile"><i class="fa-solid fa-calculator"></i><h3>Accounting</h3></div>
@@ -284,11 +297,11 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Finance & Accounting Pain</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" alt="Finance"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
                         <p><strong>ปัญหา:</strong> เช็คสลิป 1,000 ใบ/วัน จนตาลาย</p>
-                        <div class="highlight-box">AI ช่วยอ่านสลิปและเปรียบเทียบยอดได้ทันที!</div>
-                        <span class="joke-tag">*ไม่ต้องมานั่งเพ่งสลิปปลอมจนสายตาเสีย</span>
+                        <div class="highlight-box">AI ช่วยอ่านสลิปและ Match ยอดให้ทันที!</div>
+                        <span class="joke-tag">*บอกลาปัญหาเพ่งสลิปปลอมจนสายตาเสีย</span>
                     </div>
                 </div>
             </div>
@@ -298,9 +311,9 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Logistics & Purchasing Pain</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" alt="Logistics"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
-                        <p><strong>ปัญหา:</strong> ของขาดสต็อกแต่ไม่รู้ตัวจนลูกค้าด่า</p>
+                        <p><strong>ปัญหา:</strong> ของขาดแต่ไม่รู้ตัวจนลูกค้าด่า</p>
                         <div class="highlight-box">BigQuery ทำนายวันของขาดล่วงหน้าได้แม่นยำ!</div>
                     </div>
                 </div>
@@ -311,10 +324,10 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Sales & Marketing Pain</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80" alt="Sales"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
-                        <p><strong>ปัญหา:</strong> ข้อมูลกระจัดกระจายใน Excel และ Line</p>
-                        <div class="highlight-box">AI สรุปยอดขายจากแชทได้ในพริบตาเดียว!</div>
+                        <p><strong>ปัญหา:</strong> ข้อมูลกระจายใน Excel และ Line</p>
+                        <div class="highlight-box">AI สรุปยอดขายจากแชทได้ในเสี้ยววินาที!</div>
                     </div>
                 </div>
             </div>
@@ -327,15 +340,15 @@
                     <div class="tile"><h3>โรงงาน</h3><p>แจ้งเตือนเครื่องจักรเสียล่วงหน้า</p></div>
                     <div class="tile"><h3>HR</h3><p>คัด Resume หมื่นฉบับเพื่อหาคนเก่ง 1 คน</p></div>
                 </div>
-                <div class="highlight-box">ลดเวลาทำงานแอดมินเพื่อให้คนได้ใช้ศักยภาพจริง</div>
+                <div class="highlight-box">ลดเวลาทำงานแอดมินเพื่อให้คนโฟกัสงานกลยุทธ์</div>
             </div>
         </section>
 
         <section class="slide" id="s21">
             <div class="content-wrapper" style="text-align:center;">
                 <h2 class="slide-title" style="border:none;">จุดไหนที่ "ปวดหัว" ที่สุด?</h2>
-                <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 6rem; color: var(--primary); margin: 30px 0;"></i>
-                <p>นึกไว้ให้ดี... เพราะเราจะแก้ปัญหานั้นวันนี้!</p>
+                <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 6rem; color: var(--primary); margin: 20px 0;"></i>
+                <p>นึกไว้ให้ดี... เพราะเราจะแก้ปัญหานั้นกันวันนี้!</p>
             </div>
         </section>
 
@@ -349,14 +362,14 @@
         <section class="slide" id="s23">
             <div class="content-wrapper" style="text-align:center;">
                 <h2>กฎการระดมสมอง (Brainstorming)</h2>
-                <p>ไม่มีไอเดียไหนที่เล็กเกินไป... หรือบ้าเกินไปสำหรับ AI</p>
+                <p>ไม่มีไอเดียไหนที่เล็กเกินไป... สำหรับ AI</p>
             </div>
         </section>
 
         <section class="slide" id="s24">
             <div class="content-wrapper" style="text-align:center;">
                 <h2>ความเร็วคืออาวุธ</h2>
-                <p>ในโลกธุรกิจที่หมุนเร็ว AI คือเทอร์โบของคุณ</p>
+                <p>ในโลกที่หมุนเร็ว AI คือเทอร์โบของคุณ</p>
             </div>
         </section>
 
@@ -367,12 +380,12 @@
             </div>
         </section>
 
-        <!-- S26-S40: PART 2 - TOOLS -->
+        <!-- SECTION 3: PART 2 - TOOLS (S26-S40) -->
         <section class="slide" id="s26">
             <div class="content-wrapper" style="text-align: center;">
                 <p style="font-size: 1.5rem; color: var(--primary);">PART 2</p>
                 <h1>รู้จักอาวุธระดับองค์กร</h1>
-                <p>Google Gemini & BigQuery: สมองกลและคลังความจำ</p>
+                <p>Google Gemini & BigQuery</p>
             </div>
         </section>
 
@@ -380,12 +393,12 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Google Gemini: สมองกล</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80" alt="Gemini"></div>
+                    <div class="image-box"><img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80"></div>
                     <div>
-                        <div class="list-item"><i class="fa-solid fa-brain"></i> เข้าใจเหตุผลทางธุรกิจ (แบบมนุษย์)</div>
-                        <div class="list-item"><i class="fa-solid fa-eye"></i> อ่านไฟล์ภาพและ PDF ได้แม่นยำกว่าตาเรา</div>
-                        <div class="list-item"><i class="fa-solid fa-language"></i> เก่งภาษาไทย รวมถึงภาษาชาวออฟฟิศ</div>
-                        <span class="joke-tag">*รวมถึงภาษาที่บางทีบอสพูดมาแล้วเราไม่ค่อยเข้าใจด้วยครับ</span>
+                        <div class="list-item"><i class="fa-solid fa-brain"></i> เข้าใจเหตุผลธุรกิจแบบมนุษย์</div>
+                        <div class="list-item"><i class="fa-solid fa-eye"></i> อ่านไฟล์ภาพและ PDF แม่นยำ</div>
+                        <div class="list-item"><i class="fa-solid fa-language"></i> เก่งภาษาไทยและภาษาออฟฟิศ</div>
+                        <span class="joke-tag">*รวมถึงภาษาที่บอสพูดแล้วเราไม่ค่อยเข้าใจด้วยครับ</span>
                     </div>
                 </div>
             </div>
@@ -393,11 +406,11 @@
 
         <section class="slide" id="s28">
             <div class="content-wrapper">
-                <h2 class="slide-title">ความลับ: Multimodal</h2>
+                <h2 class="slide-title">Multimodal: เข้าใจทุกอย่าง</h2>
                 <div class="tile-grid">
                     <div class="tile"><h3>เข้าใจภาพ</h3><p>อ่านสลิปธนาคารหรือรูปสต็อก</p></div>
                     <div class="tile"><h3>เข้าใจ Code</h3><p>ช่วยเขียน SQL/Excel สูตรยากๆ</p></div>
-                    <div class="tile"><h3>เข้าใจคน</h3><p>ร่างอีเมลตอบลูกค้าที่โกรธให้นุ่มนวลลง</p></div>
+                    <div class="tile"><h3>เข้าใจคน</h3><p>ร่างอีเมลตอบลูกค้าให้นุ่มนวลลง</p></div>
                 </div>
             </div>
         </section>
@@ -406,7 +419,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Gemini: นักอ่านในตำนาน</h2>
                 <p>ส่งสัญญา 100 หน้าให้ Gemini แล้วถามว่า...</p>
-                <div class="highlight-box">"สรุปจุดที่เราเสียเปรียบในสัญญานี้มาให้หน่อย"</div>
+                <div class="highlight-box">"สรุปจุดที่เราเสียเปรียบในสัญญานี้มาหน่อย"</div>
                 <p style="text-align:center;">ประหยัดเวลาอ่านไปได้ 1 สัปดาห์เต็มๆ!</p>
             </div>
         </section>
@@ -416,7 +429,7 @@
                 <h2 class="slide-title">Gemini @ Workspace</h2>
                 <div class="tile-grid">
                     <div class="tile"><i class="fa-solid fa-file-word"></i><p>ร่างรายงานใน Docs</p></div>
-                    <div class="tile"><i class="fa-solid fa-table"></i><p>สร้างตารางใน Sheets</p></div>
+                    <div class="tile"><i class="fa-solid fa-table"></i><p>สร้างตารางติดตามงานใน Sheets</p></div>
                     <div class="tile"><i class="fa-solid fa-envelope"></i><p>คัดเมลสำคัญใน Gmail</p></div>
                 </div>
             </div>
@@ -426,11 +439,11 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">BigQuery: คลังความจำระดับเทพ</h2>
                 <div class="two-col">
-                    <div class="image-box"><img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnPsv3QJ0RjDSWHosRaoCLjqYscSJ37bEhOUfHH6BS4DvqRrRxFfLwB6VCQNcP8cwDK8t3k77tVaYQMkHKxUvzXt_VfNdw6SHUAJ1RRPYZz2fwVWOv3lyy-38xzYExAgbcs3Gd_Q?key=oM1iEm_GFRsUkX11w0QCUvNo" alt="BigQuery"></div>
+                    <div class="image-box"><img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnPsv3QJ0RjDSWHosRaoCLjqYscSJ37bEhOUfHH6BS4DvqRrRxFfLwB6VCQNcP8cwDK8t3k77tVaYQMkHKxUvzXt_VfNdw6SHUAJ1RRPYZz2fwVWOv3lyy-38xzYExAgbcs3Gd_Q?key=oM1iEm_GFRsUkX11w0QCUvNo"></div>
                     <div>
-                        <div class="list-item"><i class="fa-solid fa-bolt"></i> ประมวลผลพันล้านแถวในเสี้ยววินาที</div>
+                        <div class="list-item"><i class="fa-solid fa-bolt"></i> ประมวลผลพันล้านแถวในพริบตา</div>
                         <div class="list-item"><i class="fa-solid fa-cloud"></i> ปลอดภัยระดับสากล ข้อมูลไม่หาย</div>
-                        <span class="joke-tag">*บอกลาปัญหาคอมค้างเวลาเปิด Excel ไฟล์ใหญ่ๆ ไปได้เลย!</span>
+                        <span class="joke-tag">*บอกลาปัญหาคอมค้างเวลาเปิด Excel ใหญ่ๆ ได้เลย!</span>
                     </div>
                 </div>
             </div>
@@ -441,7 +454,7 @@
                 <h2 class="slide-title">BigQuery ML: ทำนายอนาคต</h2>
                 <div class="tile-grid">
                     <div class="tile"><h3>พยากรณ์ยอด</h3><p>เดือนหน้าอะไรจะขายดีที่สุด?</p></div>
-                    <div class="tile"><h3>คัดคนเก่ง</h3><p>พนักงานคนไหนกำลังจะลาออก?</p></div>
+                    <div class="tile"><h3>คัดคนเก่ง</h3><p>พนักงานคนไหนจะลาออก?</p></div>
                 </div>
             </div>
         </section>
@@ -450,7 +463,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">คุยกับข้อมูลเป็นภาษาไทย</h2>
                 <div class="highlight-box">"สรุปยอดขายแยกรายภาคของปีที่แล้วให้หน่อย"</div>
-                <span class="joke-tag">*ไม่ต้องเรียนจบคอมฯ ก็คุยกับข้อมูลหมื่นล้านแถวได้เหมือนคุยกับเพื่อนครับ</span>
+                <span class="joke-tag">*ไม่ต้องจบคอมฯ ก็คุยกับข้อมูลหมื่นล้านแถวได้เหมือนคุยกับเพื่อนครับ</span>
             </div>
         </section>
 
@@ -458,7 +471,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Connected Sheets</h2>
                 <p>ดึงพลัง BigQuery มาวางบน Google Sheets ที่คุณถนัด</p>
-                <div class="tile"><p>ใช้ง่ายเหมือนเดิม แต่ "ไม่มีคำว่าเครื่องค้าง" ต่อให้ข้อมูลมหาศาลแค่ไหน</p></div>
+                <div class="tile"><p>ใช้ง่ายเหมือนเดิม แต่เครื่องไม่มีวันค้าง!</p></div>
             </div>
         </section>
 
@@ -466,7 +479,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Security & Privacy</h2>
                 <div class="tile-grid">
-                    <div class="tile"><i class="fa-solid fa-lock"></i><p>ข้อมูลบริษัทไม่รั่วไหลไปเทรน Model สาธารณะ</p></div>
+                    <div class="tile"><i class="fa-solid fa-lock"></i><p>ข้อมูลบริษัทไม่รั่วไป Model สาธารณะ</p></div>
                     <div class="tile"><i class="fa-solid fa-user-shield"></i><p>จัดการสิทธิ์ระดับบุคคลได้ปลอดภัย</p></div>
                 </div>
             </div>
@@ -476,8 +489,8 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Real-time Insights</h2>
                 <div class="two-col">
-                    <div class="tile"><h3>อดีต</h3><p>รอรายงานปิดเดือน... เพื่อดูข้อมูลย้อนหลัง</p></div>
-                    <div class="tile" style="border-color: var(--primary);"><h3>อนาคต</h3><p>เห็นวินาทีนี้ และตัดสินใจได้ทันที!</p></div>
+                    <div class="tile"><h3>อดีต</h3><p>รอรายงานปิดเดือนเพื่อดูข้อมูลเก่า</p></div>
+                    <div class="tile" style="border-color: var(--primary);"><h3>อนาคต</h3><p>เห็นวินาทีนี้ และตัดสินใจทันที!</p></div>
                 </div>
             </div>
         </section>
@@ -486,7 +499,6 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Thinking Frame</h2>
                 <div class="highlight-box" style="text-align: center;">"ถ้าฉันมีข้อมูล [X] และให้ AI ช่วย [Y]<br>ฉันจะประหยัดเวลาได้ [Z] ชั่วโมง"</div>
-                <p style="text-align:center;">สูตรลับสำหรับการขุด Pain Point ให้แตกกระจาย</p>
             </div>
         </section>
 
@@ -494,29 +506,28 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Case 1: สต็อกไม่บวม</h2>
                 <p>คลังสินค้าใช้ BigQuery ML ทำนาย Demand ล่วงหน้า</p>
-                <div class="list-item"><i class="fa-solid fa-check"></i> ลดเงินจมสต็อกได้ 25% ทันที</div>
-                <div class="list-item"><i class="fa-solid fa-check"></i> ส่งของเร็วขึ้น 2 เท่าเพราะของไม่ขาด</div>
+                <div class="list-item"><i class="fa-solid fa-check"></i> ลดเงินจมสต็อกได้ 25%</div>
+                <div class="list-item"><i class="fa-solid fa-check"></i> ส่งของเร็วขึ้น 2 เท่า</div>
             </div>
         </section>
 
         <section class="slide" id="s39">
             <div class="content-wrapper">
                 <h2 class="slide-title">Case 2: ตอบแชทเซียน</h2>
-                <div class="image-box" style="max-height: 250px;"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" alt="Support"></div>
-                <p>สรุป Sentiment ลูกค้าหมื่นคนในวินาทีเดียว</p>
-                <div class="highlight-box">ทำให้แอดมินรู้ว่าใคร "โกรธจริง" หรือ "โกรธเล่น" (ฮา)</div>
+                <div class="image-box" style="max-height: 250px;"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80"></div>
+                <p>สรุป Sentiment ลูกค้าหมื่นข้อความในวินาทีเดียว</p>
             </div>
         </section>
 
         <section class="slide" id="s40">
             <div class="content-wrapper">
                 <h2 class="slide-title">Case 3: งบไม่หลุด</h2>
-                <p>Finance ร่างงบประมาณอัตโนมัติจากข้อมูลประวัติศาสตร์มหาศาล</p>
-                <div class="highlight-box">ลดเวลาเตรียมงาน 15 วันทำการ... เอาเวลาไปเที่ยวแทน (บอสโอเคไหม?)</div>
+                <p>Finance ร่างงบประมาณอัตโนมัติจากข้อมูล BigQuery</p>
+                <div class="highlight-box">ลดเวลาเตรียมงาน 15 วันทำการ!</div>
             </div>
         </section>
 
-        <!-- S41-S53: PART 3 - ACTIVITY -->
+        <!-- SECTION 4: PART 3 - ACTIVITY (S41-S55) -->
         <section class="slide" id="s41">
             <div class="content-wrapper" style="text-align: center;">
                 <p style="font-size: 1.5rem; color: var(--primary);">PART 3</p>
@@ -531,7 +542,7 @@
                 <div class="tile-grid">
                     <div class="tile"><h3>1. Mapping</h3><p>ขุดปัญหาลง Post-it</p></div>
                     <div class="tile"><h3>2. Voting</h3><p>เดินดูรอบห้องและโหวต</p></div>
-                    <div class="tile"><h3>3. Matrix</h3><p>จัดลำดับหา Quick Wins</p></div>
+                    <div class="tile"><h3>3. Matrix</h3><p>หา Quick Wins</p></div>
                     <div class="tile"><h3>4. Pitching</h3><p>นำเสนอทางออกใน 3 นาที</p></div>
                 </div>
             </div>
@@ -612,14 +623,14 @@
 
         <section class="slide" id="s46">
             <div class="content-wrapper">
-                <h2 class="slide-title">Impact vs Effort</h2>
+                <h2 class="slide-title">Impact vs Effort Matrix</h2>
                 <div class="matrix">
-                    <div class="matrix-cell"><h3>Hard Slogs</h3><p>ทำยากแต่ได้น้อย (ข้ามไป)</p></div>
-                    <div class="matrix-cell" style="opacity: 0.5;"><h3>Big Projects</h3><p>ทำยากแต่ผลเยอะ (ไว้ทีหลัง)</p></div>
-                    <div class="matrix-cell"><h3>Fill-ins</h3><p>ทำง่ายแต่ได้น้อย (ทำเล่นๆ ได้)</p></div>
+                    <div class="matrix-cell"><h3>Hard Slogs</h3><p>ทำยากแต่ได้น้อย</p></div>
+                    <div class="matrix-cell" style="opacity: 0.5;"><h3>Big Projects</h3><p>ทำยากแต่ผลเยอะ</p></div>
+                    <div class="matrix-cell"><h3>Fill-ins</h3><p>ทำง่ายแต่ได้น้อย</p></div>
                     <div class="matrix-cell active">
                         <h3 style="color:var(--primary); font-size: 2.2rem;">Quick Wins</h3>
-                        <p><strong>ทำง่าย / ผลลัพธ์ปัง!</strong><br>นี่คือสิ่งที่เราจะหาในวันนี้</p>
+                        <p><strong>ทำง่าย / ผลลัพธ์ปัง!</strong><br>นี่คือเป้าหมายของเราวันนี้</p>
                     </div>
                 </div>
             </div>
@@ -627,18 +638,18 @@
 
         <section class="slide" id="s47">
             <div class="content-wrapper">
-                <h2 class="slide-title">Voting: โหวตอย่างไรให้ได้โปรเจค?</h2>
+                <h2 class="slide-title">Voting: โหวตอย่างไรให้โปร่งใส?</h2>
                 <div class="two-col">
                     <div>
                         <p><strong>ขั้นตอน "Gallery Walk":</strong></p>
                         <div class="list-item"><i class="fa-solid fa-walking"></i> เดินดูไอเดียของทุกกลุ่มรอบห้อง</div>
                         <div class="list-item"><i class="fa-solid fa-star"></i> ทุกคนมีสติ๊กเกอร์ 3 ดวง (3 โหวต)</div>
-                        <div class="list-item"><i class="fa-solid fa-globe"></i> โหวตให้ไอเดียที่ "ว้าว" ที่สุดข้ามแผนกได้</div>
+                        <div class="list-item"><i class="fa-solid fa-globe"></i> โหวตให้ไอเดียที่ "ว้าว" ที่สุด (ข้ามแผนกได้)</div>
                     </div>
                     <div class="tile">
                         <h3>เกณฑ์การตัดสินใจ:</h3>
                         <p>1. <strong>Impact:</strong> ทำแล้วชีวิตดีขึ้นจริง</p>
-                        <p>2. <strong>Feasibility:</strong> AI ช่วยได้แน่ๆ</p>
+                        <p>2. <strong>Feasibility:</strong> มีข้อมูลพร้อมและ AI ช่วยได้</p>
                         <span class="joke-tag">*ห้ามโหวตให้ไอเดียตัวเองหมดเลยนะครับ แบ่งเพื่อนบ้าง!</span>
                     </div>
                 </div>
@@ -649,7 +660,7 @@
             <div class="content-wrapper">
                 <h2 class="slide-title">Pitching ใน 3 นาที</h2>
                 <div class="highlight-box">สูตรเด็ด: " Hook → Pain → Cure → Value "</div>
-                <p>1. <strong>Hook:</strong> ถ้าปล่อยให้เป็นแบบนี้ต่อไป เราจะพังแค่ไหน...<br>2. <strong>Cure:</strong> Gemini/BQ จะเข้ามาช่วยกู้โลกอย่างไร...<br>3. <strong>Value:</strong> บอสจะได้กำไรเพิ่ม หรือประหยัดไปกี่ล้าน...!</p>
+                <p>1. <strong>Hook:</strong> ถ้าปล่อยให้เป็นแบบเดิม เราจะพังแค่ไหน...<br>2. <strong>Cure:</strong> Gemini/BQ จะช่วยกู้โลกอย่างไร...<br>3. <strong>Value:</strong> บอสจะประหยัดไปกี่ล้าน...!</p>
             </div>
         </section>
 
@@ -657,7 +668,7 @@
             <div class="content-wrapper" style="text-align:center;">
                 <h2 class="slide-title" style="border:none;">Mapping Time: เริ่มได้!</h2>
                 <div class="timer-display">30:00</div>
-                <p style="font-size: 2rem;">ระเบิดความเจ็บปวดออกมา แล้วเปลี่ยนเป็นอนาคตครับ!</p>
+                <p style="font-size: 1.8rem;">ระเบิดความเจ็บปวดออกมา แล้วเปลี่ยนเป็นอนาคตครับ!</p>
                 <i class="fa-solid fa-pen-fancy" style="font-size: 5rem; color: var(--primary); margin-top: 20px;"></i>
             </div>
         </section>
@@ -666,8 +677,7 @@
             <div class="content-wrapper" style="text-align: center;">
                 <h1 style="font-size: 6rem;">THANK YOU</h1>
                 <p>"Together, We Build the Smart Future"</p>
-                <div class="image-box" style="max-width: 500px; margin: 20px auto;"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="Future"></div>
-                <p>ก้าวต่อไป: พัฒนาไอเดียโหวตสูงสุด สู่ POC จริงในเดือนหน้า!</p>
+                <div class="image-box" style="max-width: 500px; margin: 20px auto;"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"></div>
                 <i class="fa-solid fa-rocket" style="font-size: 5rem; color: var(--primary); margin-top: 20px;"></i>
             </div>
         </section>
@@ -677,7 +687,7 @@
     <script>
         const container = document.getElementById('presentation');
         const currentLabel = document.getElementById('current');
-        const totalSlides = 53;
+        const totalSlides = 55;
 
         function updateCounter() {
             const currentIdx = Math.round(container.scrollTop / window.innerHeight);
