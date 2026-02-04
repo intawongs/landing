@@ -3,519 +3,870 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCI Smart Production System | Phase 1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Workshop Takumi: Gemini & BigQuery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: #06b6d4;
-            --secondary: #10b981;
-            --dark: #0f172a;
-            --dark-lighter: #1e293b;
+            --primary: #22d3ee;
+            --secondary: #818cf8;
+            --bg-dark: #020617;
+            --bg-card: rgba(30, 41, 59, 0.5);
+            --text-main: #f8fafc;
+            --text-dim: #cbd5e1;
+            --joke-color: #f472b6;
+            --postit-red: #ff8787;
+            --postit-yellow: #ffeead;
+            --postit-green: #c0f1c0;
         }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
         
         body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             font-family: 'Sarabun', sans-serif;
-            background-color: var(--dark);
-            color: #f8fafc;
-            scroll-behavior: smooth;
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        h1, h2, h3, .font-prompt {
-            font-family: 'Prompt', sans-serif;
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
+        /* Navigation Control */
+        .nav-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 50px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
         }
 
-        .glass-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .section-title {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 3rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 60%;
-            height: 4px;
+        .nav-btn {
             background: var(--primary);
-            border-radius: 2px;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
             font-weight: bold;
-            flex-shrink: 0;
         }
 
-        .workflow-line {
+        .nav-btn:hover { transform: scale(1.1); background: white; }
+        
+        .slide-counter {
+            padding: 10px;
+            font-family: 'Poppins';
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        /* Presentation Structure */
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            padding: 80px;
+            position: relative;
+            background-color: var(--bg-dark);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .slide::before {
+            content: '';
             position: absolute;
-            left: 20px;
-            top: 40px;
-            bottom: 0;
-            width: 2px;
-            background: rgba(6, 182, 212, 0.3);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.05) 0%, transparent 40%);
+            z-index: 0;
         }
 
-        .nav-link:hover {
-            color: var(--primary);
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        /* Hero Animation */
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-            100% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.2); }
-        }
-        .hero-glow {
-            animation: glow 3s infinite;
+        /* Typography */
+        h1, h2, h3 { font-family: 'Poppins', 'Sarabun'; margin: 0; line-height: 1.2; }
+        h1 { font-size: 4.5rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2.slide-title { font-size: 3.5rem; color: var(--primary); margin-bottom: 40px; border-left: 12px solid var(--primary); padding-left: 30px; }
+        p { font-size: 2.2rem; color: var(--text-dim); line-height: 1.6; }
+
+        /* Components */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+        .image-box { border-radius: 30px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.7); height: 500px; background: #1e293b; }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-top: 50px; }
+        .tile { background: var(--bg-card); padding: 45px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; }
+        .tile i { font-size: 4rem; color: var(--primary); margin-bottom: 25px; display: block; }
+        .tile h3 { font-size: 2.5rem; margin-bottom: 20px; color: white; }
+        .tile p { font-size: 1.8rem; }
+        
+        .joke-tag {
+            color: var(--joke-color);
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-top: 20px;
+            display: block;
         }
 
-        /* Abstract UI Elements */
-        .machine-node {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
+        /* Post-it Mockups */
+        .postit-stack { display: flex; gap: 20px; justify-content: center; align-items: center; }
+        .postit { width: 280px; height: 280px; padding: 25px; color: #333; font-weight: bold; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; text-align: center; box-shadow: 10px 10px 20px rgba(0,0,0,0.4); transform: rotate(-2deg); }
+        .postit.red { background-color: var(--postit-red); }
+        .postit.yellow { background-color: var(--postit-yellow); transform: rotate(3deg); }
+        .postit.green { background-color: var(--postit-green); transform: rotate(-1deg); }
+
+        .highlight-box { background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), transparent); border-left: 10px solid var(--primary); padding: 50px; border-radius: 0 25px 25px 0; font-size: 2.4rem; font-style: italic; }
+
+        .matrix { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 25px; height: 500px; width: 100%; position: relative; }
+        .matrix::before { content: 'Impact ↑'; position: absolute; left: -80px; top: 50%; transform: rotate(-90deg); color: var(--primary); font-size: 2.5rem; font-weight: bold; }
+        .matrix::after { content: 'Effort (Easy) ← Effort (Hard) →'; position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); color: var(--primary); font-size: 2rem; font-weight: bold; }
+        .matrix-cell { display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(30, 41, 59, 0.6); border: 2px dashed rgba(255,255,255,0.1); border-radius: 25px; text-align: center; padding: 40px; }
+        .matrix-cell.active { background: rgba(34, 211, 238, 0.15); border-color: var(--primary); border-style: solid; box-shadow: 0 0 40px rgba(34, 211, 238, 0.2); }
+
+        .list-item { display: flex; align-items: flex-start; gap: 25px; margin-bottom: 35px; font-size: 2.2rem; line-height: 1.6; }
+        .list-item i { color: var(--primary); font-size: 2.5rem; margin-top: 10px; }
+
+        .timer-display { font-size: 14rem; font-weight: 700; font-family: 'Poppins'; color: var(--primary); text-align: center; margin-top: 20px; text-shadow: 0 0 50px rgba(34, 211, 238, 0.4); }
+
+        @media (max-width: 1024px) {
+            .slide { padding: 50px; }
+            h1 { font-size: 3rem; }
+            h2.slide-title { font-size: 2.5rem; }
+            p { font-size: 1.8rem; }
+            .two-col { grid-template-columns: 1fr; }
+            .image-box { height: 350px; }
         }
-        .status-running { background: var(--secondary); box-shadow: 0 0 8px var(--secondary); }
-        .status-waiting { background: #f59e0b; }
-        .status-stop { background: #ef4444; }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-card border-none bg-slate-900/80">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-cyan-500 rounded flex items-center justify-center">
-                    <i class="fa-solid fa-microchip text-white"></i>
-                </div>
-                <span class="font-prompt font-bold text-xl tracking-wider">RCI SMART PRODUCTION</span>
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm font-prompt">
-                <a href="#problem" class="nav-link transition">ปัญหา</a>
-                <a href="#system" class="nav-link transition">ระบบ</a>
-                <a href="#workflow" class="nav-link transition">ขั้นตอน</a>
-                <a href="#features" class="nav-link transition">ฟีเจอร์</a>
-                <a href="#roadmap" class="nav-link transition">แผนงาน</a>
-            </div>
-        </div>
-    </nav>
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="prevSlide()"><i class="fa-solid fa-chevron-up"></i></button>
+        <div class="slide-counter"><span id="current">1</span> / 50</div>
+        <button class="nav-btn" onclick="nextSlide()"><i class="fa-solid fa-chevron-down"></i></button>
+    </div>
 
-    <!-- Hero Section -->
-    <header class="min-h-screen flex items-center pt-20 relative overflow-hidden">
-        <div class="absolute top-20 right-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div class="absolute bottom-10 left-[-5%] w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="presentation-container" id="presentation">
         
-        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <div data-aos="fade-up">
-                <div class="inline-block px-4 py-1 rounded-full bg-cyan-500/20 text-cyan-400 text-sm font-prompt mb-6">
-                    Phase 1 - Digital Foundation
-                </div>
-                <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6">
-                    ยกระดับการผลิตด้วย<br><span class="text-cyan-500">Smart System</span>
-                </h1>
-                <p class="text-lg text-slate-400 mb-8 max-w-lg">
-                    การวางรากฐานดิจิทัลเพื่อเปลี่ยนผ่านจากระบบกระดาษสู่ระบบ Real-time Data Hub สำหรับเครื่องจักร M1 - M9
-                </p>
-                <div class="flex flex-wrap gap-4 text-sm text-slate-500 font-prompt">
-                    <span><i class="fa-solid fa-users-gear mr-2 text-cyan-500"></i>จัดทำโดย: แผนก R&D AI & IT</span>
-                    <span><i class="fa-solid fa-calendar-day mr-2 text-cyan-500"></i>28 มกราคม 2569</span>
-                </div>
-                <div class="mt-10">
-                    <a href="#workflow" class="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-4 rounded-xl font-prompt font-bold transition hero-glow inline-block">
-                        ดูขั้นตอนการทำงาน
-                    </a>
-                </div>
+        <!-- SLIDE 1 -->
+        <section class="slide" id="s1">
+            <div class="content-wrapper" style="text-align: center;">
+                <p class="subtitle" style="letter-spacing: 15px; color: var(--primary); font-size: 2.2rem; margin-bottom: 30px;">WORKSHOP TAKUMI</p>
+                <h1>ปลดล็อกศักยภาพงานด้วย<br>Gemini & BigQuery</h1>
+                <div style="width: 150px; height: 8px; background: var(--secondary); margin: 60px auto;"></div>
+                <p style="font-size: 2.8rem;">เปลี่ยน "งานล้น" เป็น "งานล้ำ" ด้วยปัญญาประดิษฐ์</p>
             </div>
-            <div class="relative">
-                <!-- UI Mockup instead of Image -->
-                <div class="glass-card p-6 rounded-2xl border-cyan-500/30 shadow-2xl bg-slate-900/90">
-                    <div class="flex items-center justify-between mb-6 border-b border-slate-700 pb-4">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                        </div>
-                        <div class="text-xs font-mono text-slate-500">RCI_SYSTEM_V1.0</div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-3 gap-3">
-                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
-                                <div class="text-[10px] text-slate-500 uppercase">Machine 01</div>
-                                <div class="text-emerald-400 font-bold">RUNNING</div>
-                            </div>
-                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
-                                <div class="text-[10px] text-slate-500 uppercase">Machine 02</div>
-                                <div class="text-amber-400 font-bold">WAITING</div>
-                            </div>
-                            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
-                                <div class="text-[10px] text-slate-500 uppercase">Machine 03</div>
-                                <div class="text-rose-400 font-bold">STOPPED</div>
-                            </div>
-                        </div>
-                        <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700 h-32 flex flex-col justify-end space-y-2">
-                            <div class="h-1 bg-cyan-500/20 rounded-full overflow-hidden">
-                                <div class="h-full bg-cyan-500 w-3/4 animate-pulse"></div>
-                            </div>
-                            <div class="h-1 bg-cyan-500/20 rounded-full overflow-hidden">
-                                <div class="h-full bg-cyan-500 w-1/2"></div>
-                            </div>
-                            <div class="h-1 bg-cyan-500/20 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-500 w-full animate-pulse"></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-center bg-cyan-500/10 p-3 rounded-lg border border-cyan-500/20">
-                            <span class="text-xs font-bold text-cyan-400">WAITING FOR APPROVAL</span>
-                            <div class="px-3 py-1 bg-cyan-500 text-white text-[10px] rounded font-bold">APPROVE</div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Abstract elements -->
-                <div class="absolute -top-6 -right-6 w-24 h-24 glass-card rounded-full flex items-center justify-center text-cyan-400 text-2xl animate-bounce">
-                    <i class="fa-solid fa-chart-column"></i>
-                </div>
-            </div>
-        </div>
-    </header>
+        </section>
 
-    <!-- Pain Points Section -->
-    <section id="problem" class="py-24 bg-slate-900/50">
-        <div class="container mx-auto px-6 text-center mb-16">
-            <h2 class="section-title text-3xl font-bold font-prompt">ทำไมเราต้องเปลี่ยน? (Pain Points)</h2>
-            <p class="text-slate-400 max-w-2xl mx-auto">ปัญหาที่เราเผชิญอยู่ทำให้ประสิทธิภาพการผลิตลดลงและมีความเสี่ยงต่อความผิดพลาดของข้อมูล</p>
-        </div>
-        <div class="container mx-auto px-6 grid md:grid-cols-4 gap-8">
-            <div class="glass-card p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-file-circle-xmark text-4xl text-rose-500 mb-6"></i>
-                <h3 class="font-prompt font-bold text-xl mb-4 text-white">Manual Process</h3>
-                <p class="text-sm text-slate-400">การบันทึกด้วยมือทำให้ข้อมูลสูญหาย หรือผิดพลาดได้ง่าย</p>
+        <!-- SLIDE 2 -->
+        <section class="slide" id="s2">
+            <div class="content-wrapper">
+                <h2 class="slide-title">แนะนำทีมวิทยากร (ที่ไม่ใช่ AI)</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" alt="[ภาพทีมงานวิทยากรกำลังประชุมอย่างมีความสุข]">
+                    </div>
+                    <div>
+                        <p>เรามาเพื่อช่วยคุณให้ "เลิกทำงานที่หุ่นยนต์ทำได้" และหันมา "ทำงานที่มนุษย์ควรทำ"</p>
+                        <div class="tile-grid" style="grid-template-columns: 1fr;">
+                            <div class="tile"><h3>ผู้เชี่ยวชาญ AI & Data</h3><p>พร้อมเปลี่ยนความเจ็บปวดในออฟฟิศให้เป็นโอกาสทางธุรกิจ</p></div>
+                        </div>
+                        <span class="joke-tag">*หมายเหตุ: วิทยากรต้องการคาเฟอีน และไม่รับชำระเป็น Token</span>
+                    </div>
+                </div>
             </div>
-            <div class="glass-card p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-eye-slash text-4xl text-rose-500 mb-6"></i>
-                <h3 class="font-prompt font-bold text-xl mb-4 text-white">Lack of Visibility</h3>
-                <p class="text-sm text-slate-400">ไม่ทราบสถานะเครื่องจักร Real-time ต้องเดินลงไปดูหน้างาน</p>
-            </div>
-            <div class="glass-card p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-satellite-dish text-4xl text-rose-500 mb-6"></i>
-                <h3 class="font-prompt font-bold text-xl mb-4 text-white">Communication Gap</h3>
-                <p class="text-sm text-slate-400">การส่งต่อข้อมูลระหว่างฝ่ายวางแผนและหน้าเครื่องล่าช้า</p>
-            </div>
-            <div class="glass-card p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-hourglass-half text-4xl text-rose-500 mb-6"></i>
-                <h3 class="font-prompt font-bold text-xl mb-4 text-white">Approval Delay</h3>
-                <p class="text-sm text-slate-400">การอนุมัติก่อนเดินเครื่องใช้เวลานานและตรวจสอบยาก</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- System Overview -->
-    <section id="system" class="py-24">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="section-title text-3xl font-bold font-prompt">ภาพรวมระบบ (System Overview)</h2>
-                    <p class="text-lg text-slate-400 mb-8">
-                        เราพัฒนาระบบ Web Application เพื่อเชื่อมโยง 3 ส่วนงานหลักเข้าด้วยกันบนฐานข้อมูลเดียว
-                    </p>
-                    <div class="space-y-6">
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-cyan-500/20 rounded-lg text-cyan-400">
-                                <i class="fa-brands fa-python text-2xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-prompt font-bold text-white">Streamlit Framework</h4>
-                                <p class="text-sm text-slate-400">Frontend ทันสมัย รองรับการแสดงผลข้อมูลซับซ้อนอย่างรวดเร็ว</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-cyan-500/20 rounded-lg text-cyan-400">
-                                <i class="fa-solid fa-bolt text-2xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-prompt font-bold text-white">Supabase Database</h4>
-                                <p class="text-sm text-slate-400">ฐานข้อมูล Real-time Cloud มั่นใจได้ในความปลอดภัยและความไว</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-cyan-500/20 rounded-lg text-cyan-400">
-                                <i class="fa-solid fa-mobile-screen text-2xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-prompt font-bold text-white">Anywhere Access</h4>
-                                <p class="text-sm text-slate-400">เข้าถึงได้ผ่านมือถือ/แท็บเล็ต ของฝ่ายผลิตได้ทุกที่ในโรงงาน</p>
-                            </div>
-                        </div>
-                    </div>
+        <!-- SLIDE 3 -->
+        <section class="slide" id="s3">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ทำไมเราถึงต้องมานั่งที่นี่?</h2>
+                <div class="highlight-box">
+                    "เรามาเพื่อทำลายวงจรชีวิตแบบเดิมๆ ที่ทำให้งานคุณไม่ขยับไปไหน"
                 </div>
-                <div class="glass-card p-8 rounded-3xl border-slate-700 bg-slate-900/40">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="font-prompt font-bold text-cyan-400 flex items-center">
-                            <span class="machine-node status-running mr-2"></span>Live Dashboard
-                        </span>
+                <div class="tile-grid">
+                    <div class="tile"><i class="fa-solid fa-face-tired"></i><h3>เพื่อคุณ</h3><p>ให้คุณมีเวลากลับบ้านไปหาครอบครัวเร็วขึ้น</p></div>
+                    <div class="tile"><i class="fa-solid fa-chart-line"></i><h3>เพื่อบริษัท</h3><p>ให้เราเป็นที่หนึ่งในตลาดด้วยความเร็วของ AI</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 -->
+        <section class="slide" id="s4">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ความจริงที่เจ็บปวด</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80" alt="[ภาพพนักงานเครียดกับกองเอกสาร]">
                     </div>
-                    <!-- CSS Dashboard Mockup -->
-                    <div class="space-y-4 font-mono text-[10px]">
-                        <div class="bg-slate-950 p-3 rounded border border-slate-800 text-slate-400">
-                            <div class="flex justify-between mb-1">
-                                <span>ORDER_ID: SO-8829</span>
-                                <span class="text-emerald-500">ACTIVE</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>MACHINE: M-01</span>
-                                <span>PROGRESS: 75%</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between">
-                                <span class="text-slate-500">M-01</span>
-                                <span class="machine-node status-running"></span>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between">
-                                <span class="text-slate-500">M-02</span>
-                                <span class="machine-node status-waiting"></span>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between">
-                                <span class="text-slate-500">M-03</span>
-                                <span class="machine-node status-running"></span>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between">
-                                <span class="text-slate-500">M-04</span>
-                                <span class="machine-node status-stop"></span>
-                            </div>
-                        </div>
-                        <div class="bg-slate-950 p-3 rounded border border-slate-800">
-                            <div class="text-slate-500 mb-2">SYSTEM LOGS</div>
-                            <div class="space-y-1">
-                                <div class="text-emerald-500/60">> M-01 Validation Complete</div>
-                                <div class="text-amber-500/60">> Waiting for Supervisor Approval</div>
-                                <div class="text-slate-600 animate-pulse">> Monitoring sensors...</div>
-                            </div>
-                        </div>
+                    <div>
+                        <p>ไฟล์ Excel ในตำนาน:</p>
+                        <ul style="font-size: 2.2rem; color: var(--text-dim); line-height: 2.5;">
+                            <li><i class="fa-solid fa-file-excel" style="color:#22c55e;"></i> Report_Final_Last_จริงนะ.xlsx</li>
+                            <li><i class="fa-brands fa-line" style="color:#06c755;"></i> ตามงานในกลุ่ม LINE ตลอด 24 ชม.</li>
+                            <li><i class="fa-solid fa-hourglass-half"></i> คีย์ข้อมูล 6 ชม. สรุปผล 1 นาที</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Workflow Section -->
-    <section id="workflow" class="py-24 bg-slate-900/50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="section-title text-3xl font-bold font-prompt">ระบบทำงานอย่างไร? (Workflow)</h2>
-            </div>
-            
-            <div class="max-w-4xl mx-auto space-y-12 relative">
-                <div class="workflow-line"></div>
-                
-                <div class="flex space-x-6 relative">
-                    <div class="step-number">1</div>
-                    <div class="glass-card p-6 rounded-2xl flex-grow">
-                        <h4 class="font-prompt font-bold text-white mb-2">Planning (วางแผน)</h4>
-                        <p class="text-slate-400">Planner สร้างใบสั่งงาน (SO) ระบุสินค้าและ Spec ผ่านระบบส่วนกลาง</p>
+        <!-- SLIDE 5 -->
+        <section class="slide" id="s5">
+            <div class="content-wrapper">
+                <h2 class="slide-title">AI คือ "เด็กฝึกงานขั้นเทพ"</h2>
+                <div class="two-col">
+                    <div>
+                        <p>จ้างเด็กฝึกงานชื่อ <strong>Gemini</strong>:</p>
+                        <ul style="font-size: 2rem; list-style: none; padding: 0;">
+                            <li class="list-item"><i class="fa-solid fa-check"></i> ไม่เคยลาป่วย ไม่เคยมาสาย</li>
+                            <li class="list-item"><i class="fa-solid fa-check"></i> อ่านเอกสารล้านหน้าในพริบตา</li>
+                            <li class="list-item"><i class="fa-solid fa-check"></i> ทำงาน Routine ที่คุณเกลียดแทนได้ 100%</li>
+                        </ul>
                     </div>
-                </div>
-                
-                <div class="flex space-x-6 relative">
-                    <div class="step-number">2</div>
-                    <div class="glass-card p-6 rounded-2xl flex-grow">
-                        <h4 class="font-prompt font-bold text-white mb-2">Assignment (รับงาน)</h4>
-                        <p class="text-slate-400">ระบบแจ้งเตือน Operator (M1-M9) ทันทีบนอุปกรณ์ประจำเครื่อง Operator กด "เลือกทำ"</p>
-                    </div>
-                </div>
-
-                <div class="flex space-x-6 relative">
-                    <div class="step-number">3</div>
-                    <div class="glass-card p-6 rounded-2xl flex-grow border-l-4 border-l-amber-500">
-                        <h4 class="font-prompt font-bold text-white mb-2">Double Validation (ตรวจสอบ 2 จุด)</h4>
-                        <div class="grid md:grid-cols-2 gap-4 mt-2 text-sm">
-                            <div class="bg-slate-800 p-3 rounded-lg"><span class="text-cyan-400 font-bold">Feeder:</span> ยืนยัน Spec เหล็กต้นทาง</div>
-                            <div class="bg-slate-800 p-3 rounded-lg"><span class="text-cyan-400 font-bold">Stacker:</span> ยืนยันการรับ/พลิกเหล็ก</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex space-x-6 relative">
-                    <div class="step-number">4</div>
-                    <div class="glass-card p-6 rounded-2xl flex-grow">
-                        <h4 class="font-prompt font-bold text-white mb-2">Approval (อนุมัติ)</h4>
-                        <p class="text-slate-400">Supervisor ตรวจสอบความถูกต้องผ่านมือถือส่วนตัว และกด "Approve"</p>
-                    </div>
-                </div>
-
-                <div class="flex space-x-6 relative">
-                    <div class="step-number bg-emerald-500"><i class="fa-solid fa-play"></i></div>
-                    <div class="glass-card p-6 rounded-2xl flex-grow border-l-4 border-l-emerald-500">
-                        <h4 class="font-prompt font-bold text-white mb-2">Execution (ผลิต)</h4>
-                        <p class="text-slate-400">ปุ่ม START ปรากฏขึ้นบนเครื่องจักร Operator จึงจะเริ่มเดินเครื่องได้</p>
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80" alt="[ภาพหุ่นยนต์ช่วยมนุษย์ทำงาน]">
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Key Features & Benefits -->
-    <section id="features" class="py-24">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-24">
-                <div>
-                    <h2 class="section-title text-3xl font-bold font-prompt">ฟีเจอร์เด่น (Key Features)</h2>
-                    <div class="grid grid-cols-1 gap-6">
-                        <div class="flex items-center space-x-4 glass-card p-4 rounded-xl">
-                            <div class="text-rose-500 text-2xl w-12 text-center"><i class="fa-solid fa-shield-halved"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white">Safety Locking</h4>
-                                <p class="text-xs text-slate-500">ล็อคปุ่ม Start จนกว่าจะผ่านการยืนยัน</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4 glass-card p-4 rounded-xl">
-                            <div class="text-cyan-500 text-2xl w-12 text-center"><i class="fa-solid fa-gauge-high"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white">Real-time Dashboard</h4>
-                                <p class="text-xs text-slate-500">เห็นสถานะเครื่องจักรสดๆ Running/Stop</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4 glass-card p-4 rounded-xl">
-                            <div class="text-amber-500 text-2xl w-12 text-center"><i class="fa-solid fa-comment-dots"></i></div>
-                            <div>
-                                <h4 class="font-bold text-white">Smart Alerts</h4>
-                                <p class="text-xs text-slate-500">แจ้งเตือนทันทีเมื่อมีงานหรือขออนุมัติ</p>
-                            </div>
-                        </div>
-                    </div>
+        <!-- SLIDE 6 -->
+        <section class="slide" id="s6">
+            <div class="content-wrapper" style="text-align: center;">
+                <h2 class="slide-title" style="border:none; text-align:center;">Activity: Check-in</h2>
+                <div class="image-box" style="height: 400px; width: 800px; margin: 0 auto 40px;">
+                    <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80" alt="[ภาพทีมงานยิ้มแย้ม]">
                 </div>
-                <div>
-                    <h2 class="section-title text-3xl font-bold font-prompt">สิ่งที่จะได้รับ (Benefits)</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-emerald-500/10 border border-emerald-500/30 p-6 rounded-2xl text-center">
-                            <div class="text-3xl font-bold text-emerald-400 mb-2">100%</div>
-                            <div class="text-sm font-prompt">Zero Paper</div>
-                        </div>
-                        <div class="bg-cyan-500/10 border border-cyan-500/30 p-6 rounded-2xl text-center">
-                            <div class="text-3xl font-bold text-cyan-400 mb-2">High</div>
-                            <div class="text-sm font-prompt">Accuracy</div>
-                        </div>
-                        <div class="bg-indigo-500/10 border border-indigo-500/30 p-6 rounded-2xl text-center">
-                            <div class="text-3xl font-bold text-indigo-400 mb-2">Low</div>
-                            <div class="text-sm font-prompt">Downtime</div>
-                        </div>
-                        <div class="bg-purple-500/10 border border-purple-500/30 p-6 rounded-2xl text-center">
-                            <div class="text-3xl font-bold text-purple-400 mb-2">Full</div>
-                            <div class="text-sm font-prompt">Traceability</div>
-                        </div>
-                    </div>
-                    <p class="mt-6 text-sm text-slate-400 text-center italic">"รากฐานที่มั่นคงเพื่อการผลิตที่ชาญฉลาดในอนาคต"</p>
+                <p style="font-size: 3.5rem; color: white;">"บอกความรู้สึกของคุณตอนนี้ <span style="color: var(--primary);">ด้วยคำเพียง 1 คำ</span>"</p>
+                <span class="joke-tag">ใครบอกว่า 'ง่วง' วิทยากรจะเรียกตอบคำถามนะครับ</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 7 -->
+        <section class="slide" id="s7">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Rules of Engagement</h2>
+                <div class="tile-grid">
+                    <div class="tile"><i class="fa-solid fa-shield-halved"></i><h3>Safe Zone</h3><p>แชร์ความผิดพลาดเพื่อการเรียนรู้</p></div>
+                    <div class="tile"><i class="fa-solid fa-ban"></i><h3>No Blaming</h3><p>เราด่าระบบครับ เราไม่ด่าคน</p></div>
+                    <div class="tile"><i class="fa-solid fa-ear-listen"></i><h3>Active Listening</h3><p>ฟังเพื่อเปลี่ยนโลกการทำงาน</p></div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Roadmap Section -->
-    <section id="roadmap" class="py-24 bg-slate-900/50">
-        <div class="container mx-auto px-6 text-center mb-16">
-            <h2 class="section-title text-3xl font-bold font-prompt">แผนงานในอนาคต (Roadmap)</h2>
-        </div>
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="relative pt-12">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 text-cyan-500 text-4xl"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="glass-card p-8 rounded-3xl h-full border-t-4 border-t-cyan-500">
-                        <h4 class="font-prompt font-bold text-white mb-4">Phase 1: Now</h4>
-                        <p class="text-cyan-400 font-bold mb-4">Digital Foundation</p>
-                        <p class="text-sm text-slate-400">สร้างระบบ Workflow และเก็บข้อมูลพื้นฐานเพื่อแทนที่กระดาษ 100%</p>
+        <!-- SLIDE 8 -->
+        <section class="slide" id="s8">
+            <div class="content-wrapper">
+                <h2 class="slide-title">วิถีแห่ง "Takumi"</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=1200&q=80" alt="[ภาพช่างฝีมือประณีต]">
                     </div>
-                </div>
-                <div class="relative pt-12">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 text-slate-700 text-4xl"><i class="fa-solid fa-circle-dot"></i></div>
-                    <div class="glass-card p-8 rounded-3xl h-full">
-                        <h4 class="font-prompt font-bold text-white mb-4 text-slate-500">Phase 2: Next</h4>
-                        <p class="text-slate-200 font-bold mb-4">System Integration</p>
-                        <p class="text-sm text-slate-400">เชื่อมต่อ SAP และ Sensor เครื่องจักร (IoT) เพื่อดึงข้อมูลอัตโนมัติ</p>
-                    </div>
-                </div>
-                <div class="relative pt-12">
-                    <div class="absolute top-0 left-1/2 -translate-x-1/2 text-slate-700 text-4xl"><i class="fa-solid fa-robot"></i></div>
-                    <div class="glass-card p-8 rounded-3xl h-full">
-                        <h4 class="font-prompt font-bold text-white mb-4 text-slate-500">Phase 3: Future</h4>
-                        <p class="text-slate-200 font-bold mb-4">AI Optimization</p>
-                        <p class="text-sm text-slate-400">ใช้ AI วิเคราะห์ข้อมูลเพื่อทำ Predictive Maintenance และจัดตารางผลิตอัตโนมัติ</p>
+                    <div>
+                        <p><strong>ความเชี่ยวชาญ (Mastery):</strong> คือการรู้จักเครื่องมือที่ทันสมัยที่สุด เพื่อสร้างผลงานที่ประณีตที่สุด</p>
+                        <p class="highlight-box">Takumi ยุค AI คือคนที่ใช้ "ปัญญาประดิษฐ์" เพื่อขัดเกลาฝีมือ</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer / Q&A -->
-    <footer class="py-20 bg-slate-950">
-        <div class="container mx-auto px-6 flex flex-col items-center text-center">
-            <h2 class="text-4xl font-bold font-prompt mb-4 text-white">RCI Smart Production System</h2>
-            <p class="text-cyan-500 font-prompt tracking-widest mb-12 uppercase">Foundation for the Future</p>
-            
-            <div class="grid md:grid-cols-2 gap-12 items-center w-full max-w-4xl">
-                <div class="text-left">
-                    <h4 class="font-prompt font-bold text-white mb-4 text-xl">ติดต่อเรา / สอบถาม</h4>
-                    <p class="text-slate-400 mb-2 font-prompt">แผนก R&D AI & IT</p>
-                    <p class="text-sm text-slate-500 mb-6">เรามุ่งมั่นสร้างนวัตกรรมเพื่อเพิ่มประสิทธิภาพการผลิตขององค์กร</p>
-                    <div class="flex space-x-4">
-                        <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-cyan-500 transition-colors hover:bg-cyan-500 hover:text-white">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-cyan-500 transition-colors hover:bg-cyan-500 hover:text-white">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
-                        <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-cyan-500 transition-colors hover:bg-cyan-500 hover:text-white">
-                            <i class="fa-solid fa-globe"></i>
-                        </div>
+        <!-- SLIDE 9 -->
+        <section class="slide" id="s9">
+            <div class="content-wrapper">
+                <h2 class="slide-title">กับดักงาน "Manual"</h2>
+                <div class="two-col">
+                    <div>
+                        <ul style="font-size: 2rem; color: var(--text-dim); line-height: 2.2;">
+                            <li><i class="fa-solid fa-copy"></i> ก๊อปจากเว็บ -> แปะ Excel</li>
+                            <li><i class="fa-solid fa-share"></i> ก๊อปจาก Excel -> แปะอีเมล</li>
+                            <li><i class="fa-solid fa-upload"></i> ก๊อปจากอีเมล -> แปะระบบ</li>
+                        </ul>
+                        <p class="highlight-box" style="margin-top: 40px;">นี่คืองานที่ควรส่งให้ AI ทำแทนเดี๋ยวนี้!</p>
+                        <span class="joke-tag">#เลิกเป็นคนคีย์ข้อมูล #มาเป็นคนคุมAI</span>
+                    </div>
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&w=1200&q=80" alt="[ภาพโต๊ะทำงานวุ่นวาย]">
                     </div>
                 </div>
-                <!-- CSS QR Code Mockup instead of API Image -->
-                <div class="bg-slate-900 p-8 rounded-3xl border border-slate-700 inline-block mx-auto">
-                    <div class="w-32 h-32 flex flex-col items-center justify-center space-y-2 border-2 border-dashed border-slate-700 rounded-xl bg-slate-950/50">
-                        <i class="fa-solid fa-qrcode text-4xl text-cyan-500"></i>
-                        <span class="text-[8px] text-slate-600 font-mono">SCAN_FOR_DEMO</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 10 -->
+        <section class="slide" id="s10">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Synergy: มนุษย์ + AI</h2>
+                <div class="tile-grid">
+                    <div class="tile" style="border-color: var(--secondary);">
+                        <i class="fa-solid fa-user-check"></i>
+                        <h3>Human Wisdom</h3>
+                        <p>ความเห็นอกเห็นใจ และการตัดสินใจเชิงกลยุทธ์</p>
                     </div>
-                    <p class="text-cyan-500 font-prompt text-xs mt-4 font-bold">RCI SYSTEM DEMO</p>
+                    <div class="tile" style="border-color: var(--primary);">
+                        <i class="fa-solid fa-microchip"></i>
+                        <h3>AI Speed</h3>
+                        <p>ความเร็วแสงในการคำนวณและประมวลผลข้อมูล</p>
+                    </div>
                 </div>
             </div>
-            
-            <div class="mt-20 pt-8 border-t border-slate-900 w-full text-xs text-slate-600 font-prompt">
-                © 2026 RCI Smart Production Project. All rights reserved.
-            </div>
-        </div>
-    </footer>
+        </section>
 
-    <!-- Simple Navigation Interaction -->
+        <!-- SLIDE 11 -->
+        <section class="slide" id="s11">
+            <div class="content-wrapper" style="text-align: center;">
+                <p class="subtitle" style="font-size: 2.5rem;">PART 1</p>
+                <h1 style="font-size: 6rem;">เจาะลึกความเจ็บปวด<br>(PAIN POINTS)</h1>
+            </div>
+        </section>
+
+        <!-- SLIDE 12 -->
+        <section class="slide" id="s12">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Pain Point คืออะไร?</h2>
+                <div class="highlight-box">
+                    "คือสิ่งที่คุณบ่นกับเพื่อนตอนพักเที่ยง และทำให้คุณไม่อยากมาทำงานในวันจันทร์"
+                </div>
+                <div class="tile-grid" style="margin-top: 50px;">
+                    <div class="tile"><h3>งานซ้ำซาก</h3><p>ทำซ้ำๆ จนจิตหลุด</p></div>
+                    <div class="tile"><h3>งานรอคน</h3><p>รออนุมัติจนงานเน่า</p></div>
+                    <div class="tile"><h3>งานที่ 'น่างง'</h3><p>ขั้นตอนเยอะจนหาทางออกไม่เจอ</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13 -->
+        <section class="slide" id="s13">
+            <div class="content-wrapper">
+                <h2 class="slide-title">The Iceberg Theory</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://c4.wallpaperflare.com/wallpaper/410/402/550/earth-iceberg-wallpaper-preview.jpg" alt="[ภาพภูเขาน้ำแข็งใต้น้ำ]">
+                    </div>
+                    <div>
+                        <p><strong>ยอดเขา:</strong> งานช้า, ยอดขายตก</p>
+                        <p><strong>ใต้น้ำ:</strong> ข้อมูลกระจาย, พนักงานเหนื่อยล้า, ระบบไม่เชื่อมต่อกัน</p>
+                        <p style="color: var(--primary); font-weight: bold; margin-top: 30px; font-size: 2.5rem;">เราต้องขุดให้ลึก เพื่อใช้ AI แก้ที่ราก!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14 -->
+        <section class="slide" id="s14">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ต้นทุนของความสูญเสีย</h2>
+                <div class="tile-grid">
+                    <div class="tile"><h3>เสียเวลา</h3><p>เฉลี่ย 3 ชม. ต่อวัน กับงานแอดมิน</p></div>
+                    <div class="tile"><h3>เสียกำลังใจ</h3><p>พนักงานเก่งๆ ลาออกเพราะเบื่องาน</p></div>
+                    <div class="tile"><h3>เสียเงิน</h3><p>ความผิดพลาดจากคนราคาแพงมหาศาล</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15 -->
+        <section class="slide" id="s15">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ทำไมต้อง AI?</h2>
+                <p>เพราะ AI สามารถเรียนรู้ความซับซ้อนของออฟฟิศเราได้!</p>
+                <div class="tile-grid">
+                    <div class="tile"><h3>Gemini</h3><p>เข้าใจภาษาไทยและบริบทไทยๆ</p></div>
+                    <div class="tile"><h3>BigQuery</h3><p>เก็บความจำได้แม่นยำกว่ามนุษย์ 1,000 เท่า</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 16 -->
+        <section class="slide" id="s16">
+            <div class="content-wrapper">
+                <h2 class="slide-title">เจาะลึกรายแผนก (Deep Dive)</h2>
+                <p>คุณอยู่ในแผนกไหน? เตรียมความเจ็บปวดมาแชร์กัน</p>
+                <div class="tile-grid">
+                    <div class="tile"><i class="fa-solid fa-coins"></i><h3>Finance</h3></div>
+                    <div class="tile"><i class="fa-solid fa-calculator"></i><h3>Accounting</h3></div>
+                    <div class="tile"><i class="fa-solid fa-cart-shopping"></i><h3>Purchasing</h3></div>
+                    <div class="tile"><i class="fa-solid fa-chart-line"></i><h3>Sales</h3></div>
+                    <div class="tile"><i class="fa-solid fa-industry"></i><h3>Production</h3></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 17 -->
+        <section class="slide" id="s17">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Finance & Accounting</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" alt="[ภาพเอกสารบัญชีบนโต๊ะ]">
+                    </div>
+                    <div>
+                        <p><strong>ปัญหา:</strong> "ทำไมยอดไม่ตรง?"</p>
+                        <p>เช็คบิล/สลิป 1,000 ใบต่อวันจนตาลาย หรือรอสรุปยอดข้ามแผนกจนปิดงบไม่ได้</p>
+                        <p class="highlight-box">AI ช่วยอ่านสลิปและเปรียบเทียบยอดได้ทันที!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 18 -->
+        <section class="slide" id="s18">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Purchasing & Logistics</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" alt="[ภาพคลังสินค้า]">
+                    </div>
+                    <div>
+                        <p><strong>ปัญหา:</strong> "ของขาดแต่ไม่รู้ตัว"</p>
+                        <p>ต้องเช็คเมล Supplier 30 เจ้า หรือรอรายงานสถานะขนส่งที่ไม่ Real-time</p>
+                        <p class="highlight-box">BigQuery ทำนายวันของขาดล่วงหน้าได้แม่นยำ 99%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 19 -->
+        <section class="slide" id="s19">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Sales & Marketing</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1200&q=80" alt="[ภาพทีมขายประชุม]">
+                    </div>
+                    <div>
+                        <p><strong>ปัญหา:</strong> "ข้อมูลลูกค้ากระจัดกระจาย"</p>
+                        <ul style="font-size: 2rem; line-height: 2;">
+                            <li>กรอก CRM วนไปไม่มีที่สิ้นสุด</li>
+                            <li>ตอบแชทลูกค้าเรื่องเดิมๆ ทั้งวัน</li>
+                        </ul>
+                        <p class="highlight-box">AI สรุปยอดขายจากแชทได้ในวินาทีเดียว!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 20 -->
+        <section class="slide" id="s20">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Production & HR</h2>
+                <div class="tile-grid">
+                    <div class="tile"><h3>โรงงาน</h3><p>เครื่องจักรพังทีนึง สายผลิตสะดุดทั้งวัน</p></div>
+                    <div class="tile"><h3>ฝ่ายบุคคล</h3><p>คัด Resume หมื่นฉบับเพื่อหาคนเก่งแค่ 1 คน</p></div>
+                </div>
+                <p class="highlight-box" style="margin-top: 40px;">AI ช่วยคัดคน และแจ้งเตือนเครื่องเสียล่วงหน้าได้!</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 21 - 25 (Placeholders for Flow/Logic) -->
+        <section class="slide" id="s21">
+            <div class="content-wrapper" style="text-align:center;">
+                <h2 class="slide-title" style="border:none; text-align:center;">จุดไหนที่ "ปวดหัว" ที่สุด?</h2>
+                <p style="font-size: 3rem;">นึกไว้ให้ดี... เพราะเราจะแก้ปัญหานั้นกันวันนี้!</p>
+                <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 10rem; color: var(--primary); margin-top: 50px;"></i>
+            </div>
+        </section>
+
+        <!-- SLIDE 26 -->
+        <section class="slide" id="s26">
+            <div class="content-wrapper" style="text-align: center;">
+                <p class="subtitle" style="font-size: 2.5rem;">PART 2</p>
+                <h1 style="font-size: 6rem;">รู้จักอาวุธระดับองค์กร</h1>
+                <p>Google Gemini & BigQuery</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 27 -->
+        <section class="slide" id="s27">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Google Gemini: สมองกล</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80" alt="[ภาพสมองกล AI ล้ำสมัย]">
+                    </div>
+                    <div>
+                        <ul style="list-style: none; padding: 0;">
+                            <li class="list-item"><i class="fa-solid fa-brain"></i> เข้าใจเหตุผลทางธุรกิจ</li>
+                            <li class="list-item"><i class="fa-solid fa-eye"></i> อ่านไฟล์ PDF/รูปภาพ ได้แม่นยำ</li>
+                            <li class="list-item"><i class="fa-solid fa-language"></i> เก่งภาษาไทย รวมถึงภาษาชาวออฟฟิศ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 28 -->
+        <section class="slide" id="s28">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ความลับ: Multimodal</h2>
+                <div class="tile-grid">
+                    <div class="tile"><h3>เข้าใจภาพ</h3><p>อ่านบิลหรือถ่ายรูปสต็อกมาวิเคราะห์ได้</p></div>
+                    <div class="tile"><h3>เข้าใจ Code</h3><p>ช่วยเขียนสูตร Excel หรือ SQL ที่ซับซ้อน</p></div>
+                    <div class="tile"><h3>เข้าใจคน</h3><p>ร่างอีเมลตอบลูกค้าที่โกรธจัดให้นุ่มนวลลง</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 29 -->
+        <section class="slide" id="s29">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Gemini: นักอ่านในตำนาน</h2>
+                <p>ส่งสัญญา 100 หน้าให้ Gemini แล้วถามว่า...</p>
+                <div class="highlight-box">
+                    "สรุปจุดที่บริษัทจะเสียเปรียบในสัญญานี้มาให้หน่อย"
+                </div>
+                <p style="margin-top: 30px;">ใช้เวลา 5 วินาที... คุณประหยัดเวลาไปได้ทั้งสัปดาห์!</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 30 -->
+        <section class="slide" id="s30">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Gemini @ Workspace</h2>
+                <div class="tile-grid">
+                    <div class="tile"><i class="fa-solid fa-file-word"></i><p>ช่วยร่างรายงานใน Docs</p></div>
+                    <div class="tile"><i class="fa-solid fa-table"></i><p>สร้างตารางติดตามงานใน Sheets</p></div>
+                    <div class="tile"><i class="fa-solid fa-envelope"></i><p>คัดกรองเมลสำคัญใน Gmail</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 31 -->
+        <section class="slide" id="s31">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Google BigQuery: คลังความจำ</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnPsv3QJ0RjDSWHosRaoCLjqYscSJ37bEhOUfHH6BS4DvqRrRxFfLwB6VCQNcP8cwDK8t3k77tVaYQMkHKxUvzXt_VfNdw6SHUAJ1RRPYZz2fwVWOv3lyy-38xzYExAgbcs3Gd_Q?key=oM1iEm_GFRsUkX11w0QCUvNo" alt="[ภาพแผนภูมิข้อมูล Big Data]">
+                    </div>
+                    <div>
+                        <p>บอกลาเครื่องค้างเพราะข้อมูลเยอะเกินไป!</p>
+                        <ul style="list-style: none;">
+                            <li class="list-item"><i class="fa-solid fa-bolt"></i> ประมวลผลพันล้านแถวในพริบตา</li>
+                            <li class="list-item"><i class="fa-solid fa-cloud"></i> อยู่บน Cloud ปลอดภัย 100%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 32 -->
+        <section class="slide" id="s32">
+            <div class="content-wrapper">
+                <h2 class="slide-title">BigQuery ML: อนาคตทำนายได้</h2>
+                <div class="tile-grid">
+                    <div class="tile"><h3>พยากรณ์ยอด</h3><p>เดือนหน้าชิ้นไหนจะขายดีที่สุด?</p></div>
+                    <div class="tile"><h3>คัดคนเก่ง</h3><p>พนักงานคนไหนกำลังจะลาออก?</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 33 -->
+        <section class="slide" id="s33">
+            <div class="content-wrapper">
+                <h2 class="slide-title">คุยกับข้อมูลด้วยภาษาไทย</h2>
+                <div class="highlight-box">
+                    "สรุปยอดขายแยกตามรายภาคของปีที่แล้วให้หน่อย"
+                </div>
+                <p style="margin-top: 30px;">Gemini จะเขียน SQL และดึงกราฟมาให้คุณทันที</p>
+                <span class="joke-tag">*ไม่ต้องเรียนจบคอมฯ ก็คุยกับข้อมูลหมื่นล้านแถวได้</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 34 -->
+        <section class="slide" id="s34">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Connected Sheets</h2>
+                <p>ดึงพลัง BigQuery มาวางบน Google Sheets ที่คุณถนัด</p>
+                <div class="tile" style="margin-top: 40px;">
+                    <p>ใช้ง่ายเหมือนเดิม แต่ "ไม่มีคำว่าเครื่องค้าง" ต่อให้ข้อมูลมหาศาลแค่ไหน</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 35 -->
+        <section class="slide" id="s35">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Security & Privacy</h2>
+                <div class="tile-grid">
+                    <div class="tile"><i class="fa-solid fa-lock"></i><p>ข้อมูลบริษัทไม่รั่วไหลไปเทรน Model สาธารณะ</p></div>
+                    <div class="tile"><i class="fa-solid fa-user-shield"></i><p>จัดการสิทธิ์การเข้าถึงได้ระดับบุคคล</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 36 -->
+        <section class="slide" id="s36">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Real-time Insights</h2>
+                <div class="two-col">
+                    <div class="tile"><h3>อดีต</h3><p>รอรายงานปิดเดือน... เพื่อดูข้อมูลย้อนหลัง</p></div>
+                    <div class="tile" style="border-color: var(--primary);"><h3>อนาคต</h3><p>เห็นยอดวินาทีนี้ และตัดสินใจได้ทันที!</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 37 -->
+        <section class="slide" id="s37">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Thinking Frame</h2>
+                <div class="highlight-box" style="text-align: center;">
+                    "ถ้าฉันมีข้อมูล [X] และให้ AI ช่วย [Y]<br>ฉันจะประหยัดเวลาได้ [Z] ชั่วโมง"
+                </div>
+                <p style="margin-top: 40px; text-align: center;">สูตรลับสำหรับการขุด Pain Point</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 38 -->
+        <section class="slide" id="s38">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Case 1: สต็อกไม่บวม</h2>
+                <p>คลังสินค้าใช้ BigQuery ML ทำนาย Demand ล่วงหน้า</p>
+                <ul style="font-size: 2.2rem; line-height: 2.5;">
+                    <li><i class="fa-solid fa-check" style="color:var(--primary)"></i> ลดเงินจมในสต็อกได้ 25%</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--primary)"></i> ส่งของเร็วขึ้น 2 เท่า</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SLIDE 39 -->
+        <section class="slide" id="s39">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Case 2: ตอบแชทอย่างเซียน</h2>
+                <div class="image-box" style="height: 350px; margin-bottom: 30px;">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" alt="[ภาพลูกค้าใช้ AI บริการ]">
+                </div>
+                <p>Gemini สรุป Sentiment ลูกค้าหมื่นข้อความในวินาทีเดียว</p>
+                <p class="highlight-box">ทำให้รู้ว่าลูกค้ารักเราหรือกำลังจะเลิกซื้อจริง</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 40 -->
+        <section class="slide" id="s40">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Case 3: งบไม่หลุด</h2>
+                <div class="two-col">
+                    <div class="image-box">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="[ภาพกราฟการเงินแม่นยำ]">
+                    </div>
+                    <div>
+                        <p>Finance ใช้ Gemini ร่างงบประมาณอัตโนมัติจากข้อมูล BigQuery</p>
+                        <p>ลดเวลาเตรียมงาน 15 วันทำการ... เอาเวลาไปวางแผนกลยุทธ์แทน!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 41 -->
+        <section class="slide" id="s41">
+            <div class="content-wrapper" style="text-align: center;">
+                <p class="subtitle" style="font-size: 2.5rem;">PART 3</p>
+                <h1 style="font-size: 5.5rem;">ขั้นตอนกิจกรรม Workshop<br>(WORKFLOW)</h1>
+                <p>มาเปลี่ยนความเจ็บปวดให้เป็นระบบอัจฉริยะ!</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 42 -->
+        <section class="slide" id="s42">
+            <div class="content-wrapper">
+                <h2 class="slide-title">4 ขั้นตอน สู่โปรเจค AI ในฝัน</h2>
+                <div class="tile-grid">
+                    <div class="tile"><h3>1. Mapping</h3><p>ขุดปัญหาลง Post-it (สีแดง-เหลือง-เขียว)</p></div>
+                    <div class="tile"><h3>2. Voting</h3><p>เลือกปัญหาที่ "โดนใจ" และ "คุ้มค่า" ที่สุด</p></div>
+                    <div class="tile"><h3>3. Matrix</h3><p>จัดลำดับความสำคัญหา Quick Wins</p></div>
+                    <div class="tile"><h3>4. Pitching</h3><p>นำเสนอทางออก AI ใน 3 นาที</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 43 -->
+        <section class="slide" id="s43">
+            <div class="content-wrapper">
+                <h2 class="slide-title">การเขียน Post-it ขั้นเทพ</h2>
+                <div class="two-col">
+                    <div class="postit-stack" style="flex-direction: column;">
+                        <div class="postit red">งานเยอะ</div>
+                        <p style="color:var(--joke-color); font-size: 1.5rem;">❌ (กว้างไป AI ช่วยไม่ถูก)</p>
+                    </div>
+                    <div class="postit-stack" style="flex-direction: column;">
+                        <div class="postit red">ต้องคัดแยกบิล<br>500 ใบต่อเช้า<br>ลง Excel มือ</div>
+                        <p style="color:var(--primary); font-size: 1.5rem;">✅ (ชัดเจน-ระบุจำนวน-AI ช่วยได้)</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 40px; font-weight: bold;">*เขียน 1 ปัญหา ต่อ Post-it 1 ใบเท่านั้นนะครับ!</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 44 -->
+        <section class="slide" id="s44">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Red → Yellow → Green Workflow</h2>
+                <p>ต่อยอดไอเดียให้จบในกระดานเดียว:</p>
+                <div class="postit-stack" style="margin-top: 50px;">
+                    <div class="postit red">ปัญหา:<br>ตรวจสอบสลิปปลอมช้า</div>
+                    <i class="fa-solid fa-arrow-right" style="font-size: 3rem; align-self: center;"></i>
+                    <div class="postit yellow">ทำไม:<br>เพราะคนโอนเยอะ<br>แถมสลิปเบลอ</div>
+                    <i class="fa-solid fa-arrow-right" style="font-size: 3rem; align-self: center;"></i>
+                    <div class="postit green">AI Helper:<br>Gemini Vision<br>ตรวจยอดอัตโนมัติ</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 45 -->
+        <section class="slide" id="s45">
+            <div class="content-wrapper">
+                <h2 class="slide-title">ใช้อะไรวัดความปัง? (Criteria)</h2>
+                <div class="tile-grid">
+                    <div class="tile">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                        <h3>ประหยัดเวลา</h3>
+                        <p>งาน 5 ชม. เหลือ 5 นาที หรือไม่?</p>
+                    </div>
+                    <div class="tile">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        <h3>สร้างมูลค่า</h3>
+                        <p>ช่วยลดความสูญเสีย หรือช่วยหาเงินเพิ่มไหม?</p>
+                    </div>
+                    <div class="tile">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <h3>ความถูกต้อง</h3>
+                        <p>ลด Error จากคนได้กี่ %?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 46 -->
+        <section class="slide" id="s46">
+            <div class="content-wrapper">
+                <h2 class="slide-title">จัดลำดับ: Impact vs Effort</h2>
+                <div class="matrix">
+                    <div class="matrix-cell"><h3>Hard Slogs</h3><p>ข้ามไปก่อนครับ</p></div>
+                    <div class="matrix-cell active" style="opacity: 0.5;"><h3>Big Projects</h3><p>ทำยากแต่ได้ผลเยอะ</p></div>
+                    <div class="matrix-cell"><h3>Fill-ins</h3><p>ทำง่ายแต่ไม่ค่อยคุ้ม</p></div>
+                    <div class="matrix-cell active">
+                        <h3 style="color:var(--primary); font-size: 3rem;">Quick Wins</h3>
+                        <p style="font-weight: bold;">ทำง่าย / ผลลัพธ์ปัง!<br>คือสิ่งที่เราจะเลือกนำเสนอวันนี้</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 47 -->
+        <section class="slide" id="s47">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Voting: เสียงสวรรค์</h2>
+                <div class="two-col">
+                    <div style="text-align: center;">
+                        <i class="fa-solid fa-ticket" style="font-size: 10rem; color: var(--joke-color);"></i>
+                        <h3 style="font-size: 4rem; margin-top: 20px;">สติ๊กเกอร์ 3 ดวง</h3>
+                    </div>
+                    <div>
+                        <ul style="list-style: none; padding: 0;">
+                            <li class="list-item"><i class="fa-solid fa-circle-check"></i> เลือกไอเดียที่ "เป็นไปได้จริง" ใน 1 เดือน</li>
+                            <li class="list-item"><i class="fa-solid fa-circle-check"></i> เลือกที่ทำแล้ว "ชีวิตพนักงานดีขึ้น"</li>
+                            <li class="list-item"><i class="fa-solid fa-circle-check"></i> ห้ามโหวตให้ตัวเองหมดเลยนะครับ!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 48 -->
+        <section class="slide" id="s48">
+            <div class="content-wrapper">
+                <h2 class="slide-title">Pitching ใน 3 นาที</h2>
+                <div class="highlight-box">
+                    สูตร: " Hook → Pain → Cure → Value "
+                </div>
+                <ul style="font-size: 2.2rem; margin-top: 40px; line-height: 2;">
+                    <li>1. <strong>Hook:</strong> ถ้าเราปล่อยให้งานนี้เป็นแบบเดิม...</li>
+                    <li>2. <strong>Cure:</strong> Gemini/BQ จะเข้ามาเปลี่ยนมันอย่างไร...</li>
+                    <li>3. <strong>Value:</strong> บอสจะได้กำไร หรือประหยัดไปเท่าไหร่...</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SLIDE 49 -->
+        <section class="slide" id="s49">
+            <div class="content-wrapper" style="text-align:center;">
+                <h2 class="slide-title" style="border:none; text-align:center;">Mapping Time: เริ่มได้!</h2>
+                <div class="timer-display">30:00</div>
+                <div class="image-box" style="height: 200px; width: 400px; margin: 30px auto;">
+                    <img src="https://images.unsplash.com/photo-1512314889357-e157c22f938d?auto=format&fit=crop&w=1200&q=80" alt="[ภาพกระดาษ Post-it]">
+                </div>
+                <p style="font-size: 2.5rem; color: white;">ดึงความเจ็บปวดออกมา แล้วเปลี่ยนเป็นอนาคตครับ</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 50 -->
+        <section class="slide" id="s50">
+            <div class="content-wrapper" style="text-align: center;">
+                <h1 style="font-size: 8rem;">THANK YOU</h1>
+                <p style="font-size: 3rem; color: white;">"Together, We Build the Smart Future"</p>
+                <div class="image-box" style="height: 300px; width: 600px; margin: 40px auto;">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="[ภาพโลกเครือข่ายดิจิทัล]">
+                </div>
+                <p style="font-size: 2.2rem; margin-top: 30px;">ก้าวต่อไป: สรุปไอเดียโหวตสูงสุด → พัฒนา POC จริงในเดือนหน้า!</p>
+                <i class="fa-solid fa-rocket" style="font-size: 8rem; color: var(--primary); margin-top: 30px;"></i>
+            </div>
+        </section>
+
+    </div>
+
     <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        const container = document.getElementById('presentation');
+        const currentLabel = document.getElementById('current');
+        const totalSlides = 50;
+
+        function nextSlide() {
+            const currentIdx = Math.round(container.scrollTop / window.innerHeight);
+            if (currentIdx < totalSlides - 1) {
+                container.scrollTo({ top: (currentIdx + 1) * window.innerHeight });
+            }
+        }
+
+        function prevSlide() {
+            const currentIdx = Math.round(container.scrollTop / window.innerHeight);
+            if (currentIdx > 0) {
+                container.scrollTo({ top: (currentIdx - 1) * window.innerHeight });
+            }
+        }
+
+        container.addEventListener('scroll', () => {
+            const currentIdx = Math.round(container.scrollTop / window.innerHeight);
+            currentLabel.textContent = currentIdx + 1;
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') prevSlide();
         });
     </script>
 </body>
